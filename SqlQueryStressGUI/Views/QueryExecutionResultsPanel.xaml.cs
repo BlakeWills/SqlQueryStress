@@ -17,14 +17,24 @@ namespace SqlQueryStressGUI.Views
 
         static QueryExecutionResultsPanel()
         {
-            ResultsProperty = DependencyProperty.Register("Results", typeof(ObservableCollection<QueryExecutionStatistics>), typeof(QueryExecutionResultsPanel));
+            //ResultsProperty = DependencyProperty.Register("Results", typeof(ObservableCollection<QueryExecutionStatistics>), typeof(QueryExecutionResultsPanel));
+            ResultsProperty = DependencyProperty.Register("Results", typeof(QueryExecutionStatisticsTable), typeof(QueryExecutionResultsPanel));
         }
+
+        //public static readonly DependencyProperty ResultsProperty;
+
+        //public ObservableCollection<QueryExecutionStatistics> Results
+        //{
+        //    get => (ObservableCollection<QueryExecutionStatistics>)GetValue(ResultsProperty);
+        //    set => SetValue(ResultsProperty, value);
+        //}
+
 
         public static readonly DependencyProperty ResultsProperty;
 
-        public ObservableCollection<QueryExecutionStatistics> Results
+        public QueryExecutionStatisticsTable Results
         {
-            get => (ObservableCollection<QueryExecutionStatistics>)GetValue(ResultsProperty);
+            get => (QueryExecutionStatisticsTable)GetValue(ResultsProperty);
             set => SetValue(ResultsProperty, value);
         }
     }

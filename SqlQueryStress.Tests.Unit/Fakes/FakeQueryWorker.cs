@@ -45,6 +45,6 @@ namespace SqlQueryStressEngine.Tests.Unit.Fakes
 
     public class FakeQueryExecutionStatistics : QueryExecutionStatistics
     {
-        public override double ElapsedTime { get; }
+        public override double ElapsedMilliseconds { get; }
     }
 }

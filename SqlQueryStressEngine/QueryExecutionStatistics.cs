@@ -6,6 +6,6 @@
     // Should we just use a dictionary instead of a type?
     public abstract class QueryExecutionStatistics
     {
-        public abstract double ElapsedTime { get; }
+        public abstract double ElapsedMilliseconds { get; }
     }
 }

@@ -59,7 +59,7 @@
             SyntaxHighlighting="TSQL"
             FontSize="10pt"/>
 
-        <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionResults}" />
+        <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 
     </Grid>
 </Page>

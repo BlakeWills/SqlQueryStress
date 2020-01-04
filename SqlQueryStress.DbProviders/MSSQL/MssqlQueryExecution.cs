@@ -1,21 +1,27 @@
-﻿namespace SqlQueryStressEngine.DbProviders.MSSQL
+﻿using SqlQueryStressEngine;
+
+namespace SqlQueryStress.DbProviders.MSSQL
 {
     public sealed class MssqlQueryExecution : QueryExecutionStatistics
     {
         public MssqlQueryExecution(
-            double elapsedTime,
-            double cpuTime,
-            int logicalReads)
+            double elapsedMilliseconds,
+            double cpuMilliseconds,
+            int logicalReads,
+            double clientElapsedMilliseconds)
         {
-            ElapsedTime = elapsedTime;
-            CpuTime = cpuTime;
+            ElapsedMilliseconds = elapsedMilliseconds;
+            CpuMilliseconds = cpuMilliseconds;
             LogicalReads = logicalReads;
+            ClientElapsedMilliseconds = clientElapsedMilliseconds;
         }
 
-        public override double ElapsedTime { get; }
+        public override double ElapsedMilliseconds { get; }
 
-        public double CpuTime { get; }
+        public double CpuMilliseconds { get; }
 
         public int LogicalReads { get; }
+
+        public double ClientElapsedMilliseconds { get; }
     }
 }

@@ -1,10 +1,9 @@
 using NUnit.Framework;
 using SqlQueryStressEngine;
 using SqlQueryStressEngine.Tests.Unit.Fakes;
-using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace SqlQueryStress.Tests.Unit
 {
@@ -23,16 +22,17 @@ namespace SqlQueryStress.Tests.Unit
         [Test]
         public void GivenSingleThreadedTestWithOneIteration_QueryIsExecutedOnce()
         {
-            var queryStressTest = new QueryStressTestBuilder<FakeQueryWorker>().BuildQueryStressTest(
+            var testParams = new QueryStressTestParameters(
                 threadCount: 1,
                 iterations: 1,
                 query: _query,
                 connectionString: _connectionString,
-                queryParameters: new KeyValuePair<string, object>[0],
+                queryParameters: Array.Empty<KeyValuePair<string, object>>(),
                 onQueryExecutionComplete: (_) => { });
 
-            queryStressTest.BeginInvoke();
+            var queryStressTest = new QueryStressTest<FakeQueryWorker>(testParams);
 
+            queryStressTest.BeginInvoke();
             queryStressTest.Wait();
 
             Assert.AreEqual(1, FakeQueryWorker.TotalExecutionCount);
@@ -42,16 +42,17 @@ namespace SqlQueryStress.Tests.Unit
         [TestCase(2, 1)]
         public void GivenMultiThreadedTestWithMultipleIterations_QueryIsExecutedNTimesFromEachThread(int threads, int iterations)
         {
-            var queryStressTest = new QueryStressTestBuilder<FakeQueryWorker>().BuildQueryStressTest(
-                threads,
-                iterations,
-                _query,
-                _connectionString,
-                queryParameters: new KeyValuePair<string, object>[0],
+            var testParams = new QueryStressTestParameters(
+                threadCount: threads,
+                iterations: iterations,
+                query: _query,
+                connectionString: _connectionString,
+                queryParameters: Array.Empty<KeyValuePair<string, object>>(),
                 onQueryExecutionComplete: (_) => { });
 
-            queryStressTest.BeginInvoke();
+            var queryStressTest = new QueryStressTest<FakeQueryWorker>(testParams);
 
+            queryStressTest.BeginInvoke();
             queryStressTest.Wait();
 
             Assert.AreEqual(threads, FakeQueryWorker.Instances.Count);

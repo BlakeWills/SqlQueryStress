@@ -1,66 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 namespace SqlQueryStressEngine
 {
-    public class QueryStressTest<TDbProvider> where TDbProvider : IQueryWorker
+    public class QueryStressTest<TDbProvider> : IQueryStressTest<TDbProvider> where TDbProvider : IQueryWorker
     {
+        private IEnumerable<Thread> _threads;
         private readonly QueryWorkerFactory _queryWorkerFactory;
 
-        public QueryStressTest()
+        public QueryStressTest(QueryStressTestParameters stressTestParameters)
         {
+            TestParameters = stressTestParameters;
             _queryWorkerFactory = new QueryWorkerFactory();
         }
 
-        public int ThreadCount { get; internal set; }
-
-        public int Iterations { get; internal set; }
-
-        public string Query { get; internal set; }
-
-        public string ConnectionString { get; internal set; }
-
-        public Action<QueryExecutionStatistics> OnQueryExecutionComplete { get; internal set; }
-
-        public IEnumerable<KeyValuePair<string, object>> QueryParameters { get; internal set; }
-
-        private IEnumerable<Thread> Threads { get; set; }
+        public QueryStressTestParameters TestParameters { get; }
 
         public void BeginInvoke()
         {
-            var workers = _queryWorkerFactory.GetQueryWorkers<TDbProvider>(ThreadCount);
+            var workers = _queryWorkerFactory.GetQueryWorkers<TDbProvider>(TestParameters.ThreadCount);
+            var workerParameters = QueryWorkerParameters.Build(TestParameters);
 
-            var workerParameters = new QueryWorkerParameters
-            {
-                Iterations = Iterations,
-                ConnectionString = ConnectionString,
-                Query = Query,
-                QueryParameters = QueryParameters
-            };
-
-            var threads = new Thread[ThreadCount];
+            var threads = new Thread[TestParameters.ThreadCount];
 
             int workerIndex = 0;
             foreach (var worker in workers)
             {
-                var thread = new Thread(() => worker.Start(workerParameters, OnQueryExecutionComplete));
+                var thread = new Thread(() => worker.Start(workerParameters, TestParameters.OnQueryExecutionComplete));
                 threads[workerIndex] = thread;
                 thread.Start();
                 workerIndex++;
             }
 
-            Threads = threads;
+            _threads = threads;
         }
 
         public void Wait()
         {
-            if (Threads == null)
+            if (_threads == null)
             {
                 return;
             }
 
-            foreach(var t in Threads)
+            foreach (var t in _threads)
             {
                 t.Join();
             }
