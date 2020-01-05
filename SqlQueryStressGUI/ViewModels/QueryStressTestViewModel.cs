@@ -75,25 +75,14 @@ namespace SqlQueryStressGUI.ViewModels
         private void StartQueryStressTest(object queryText)
         {
             Results = new List<QueryExecutionStatistics>();
+            QueryExecutionStatisticsTable?.Clear();
 
             var timer = new DispatcherTimer()
             {
-                Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 100)
+                Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 25)
             };
 
-            var test = new QueryStressTest
-            {
-                DbProvider = GetDbProvider(SelectedDbProvider),
-                ThreadCount = ThreadCount,
-                Iterations = Iterations,
-                Query = queryText.ToString(),
-                ConnectionString = ConnectionString,
-                OnQueryExecutionComplete = (result) =>
-                {
-                    Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
-                },
-                QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
-            };
+            var test = BuildQueryStressTest(queryText.ToString());
 
             test.StressTestComplete += (sender, args) =>
             {
@@ -111,6 +100,20 @@ namespace SqlQueryStressGUI.ViewModels
             test.BeginInvoke();
         }
 
+        private QueryStressTest BuildQueryStressTest(string queryText) => new QueryStressTest
+        {
+            DbProvider = GetDbProvider(SelectedDbProvider),
+            ThreadCount = ThreadCount,
+            Iterations = Iterations,
+            Query = queryText,
+            ConnectionString = ConnectionString,
+            QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
+            OnQueryExecutionComplete = (result) =>
+            {
+                Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
+            }
+        };
+
         private IDbProvider GetDbProvider(DbProvider dbProvider) => dbProvider switch
         {
             DbProvider.MSSQL => new MssqlDbProvider(),
@@ -123,6 +126,7 @@ namespace SqlQueryStressGUI.ViewModels
 
             AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));
 
+            // This is thread safe as we only ever call it from the UI thread.
             if (QueryExecutionStatisticsTable == null)
             {
                 QueryExecutionStatisticsTable = QueryExecutionStatisticsTable.CreateFromExecutionResult(executionStatistics);
