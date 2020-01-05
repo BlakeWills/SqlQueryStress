@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStressEngine", "Sql
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStressEngine.Tests.Unit", "SqlQueryStress.Tests.Unit\SqlQueryStressEngine.Tests.Unit.csproj", "{6D70BF28-4D5E-42C6-B1F5-B3B1DD9A7FDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlQueryStress.DbProviders", "SqlQueryStress.DbProviders\SqlQueryStress.DbProviders.csproj", "{A63D8220-FE3C-4268-9D47-2412944D9CE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStress.DbProviders", "SqlQueryStress.DbProviders\SqlQueryStress.DbProviders.csproj", "{A63D8220-FE3C-4268-9D47-2412944D9CE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlQueryStress.DbProviders.Tests", "SqlQueryStress.DbProviders.Tests\SqlQueryStress.DbProviders.Tests.csproj", "{6B502B62-537E-48F9-987D-C21770E9EAC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A63D8220-FE3C-4268-9D47-2412944D9CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A63D8220-FE3C-4268-9D47-2412944D9CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A63D8220-FE3C-4268-9D47-2412944D9CE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B502B62-537E-48F9-987D-C21770E9EAC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B502B62-537E-48F9-987D-C21770E9EAC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B502B62-537E-48F9-987D-C21770E9EAC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B502B62-537E-48F9-987D-C21770E9EAC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

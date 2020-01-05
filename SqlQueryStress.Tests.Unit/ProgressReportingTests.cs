@@ -24,17 +24,18 @@ namespace SqlQueryStress.Tests.Unit
             int onQueryExecutionInvocations = 0;
             int iterations = 5;
 
-            var testParams = new QueryStressTestParameters(
-               threadCount: 1,
-               iterations: iterations,
-               query: _query,
-               connectionString: _connectionString,
-               queryParameters: Array.Empty<KeyValuePair<string, object>>(),
-               onQueryExecutionComplete: (executionStats) => {
-                   Interlocked.Increment(ref onQueryExecutionInvocations);
-               });
-
-            var queryStressTest = new QueryStressTest<FakeQueryWorker>(testParams);
+            var queryStressTest = new QueryStressTest
+            {
+                ConnectionString = _connectionString,
+                ThreadCount = 1,
+                Iterations = iterations,
+                DbProvider = new FakeDbProvider(),
+                Query = _query,
+                QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
+                OnQueryExecutionComplete = (executionStats) => {
+                    Interlocked.Increment(ref onQueryExecutionInvocations);
+                }
+            };
 
             queryStressTest.BeginInvoke();
             queryStressTest.Wait();

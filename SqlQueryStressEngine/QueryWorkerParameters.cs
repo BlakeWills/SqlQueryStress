@@ -11,16 +11,5 @@ namespace SqlQueryStressEngine
         public string Query { get; set; }
 
         public IEnumerable<KeyValuePair<string, object>> QueryParameters { get; set; }
-
-        internal static QueryWorkerParameters Build(QueryStressTestParameters parameters)
-        {
-            return new QueryWorkerParameters()
-            {
-                Iterations = parameters.Iterations,
-                ConnectionString = parameters.ConnectionString,
-                Query = parameters.Query,
-                QueryParameters = parameters.QueryParameters
-            };
-        }
     }
 }

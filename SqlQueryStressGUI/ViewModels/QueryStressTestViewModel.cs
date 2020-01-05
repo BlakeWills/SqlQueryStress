@@ -67,38 +67,26 @@ namespace SqlQueryStressGUI.ViewModels
 
         private void StartQueryStressTest(object queryText)
         {
-            // Problem is that obscol isn't covariant.
-            // Another problem is that it isn't discoverable via intellisense.
-            // Q: Do we need it to be discoverable? I can imagine a situation where people implement custom resultAnalysers for their DbProvider.
-            // Describe the problem: 
-            // We need a collection of query results but the data contained in the result will differ for each type of DbProvider.
-            // Options are:
-            //  - a custom class for each type of DbProvider.
-            //  - dictionary?
-            // don't like dictionary as that has the same problems (not discoverable) - not programming against a type.
-            // Is there a bigger issue here? I.E How are we going to create the generic QueryStressTest?
-
-            var testParams = new QueryStressTestParameters
-            (
-                ThreadCount,
-                Iterations,
-                queryText.ToString(),
-                ConnectionString,
-                onQueryExecutionComplete: (result) =>
+            var test = new QueryStressTest
+            {
+                DbProvider = GetDbProvider(SelectedDbProvider),
+                ThreadCount = ThreadCount,
+                Iterations = Iterations,
+                Query = queryText.ToString(),
+                ConnectionString = ConnectionString,
+                OnQueryExecutionComplete = (result) =>
                 {
                     Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
                 },
-                queryParameters: Array.Empty<KeyValuePair<string, object>>()
-            );
-
-            var test = GetQueryStressTest(SelectedDbProvider, testParams);
+                QueryParameters = Array.Empty<KeyValuePair<string, object>>()
+            };
 
             test.BeginInvoke();
         }
 
-        private IQueryStressTest<IQueryWorker> GetQueryStressTest(DbProvider dbProvider, QueryStressTestParameters testParameters) => dbProvider switch
+        private IDbProvider GetDbProvider(DbProvider dbProvider) => dbProvider switch
         {
-            DbProvider.MSSQL => new QueryStressTest<MssqlQueryWorker>(testParameters),
+            DbProvider.MSSQL => new MssqlDbProvider(),
             _ => throw new ArgumentException()
         };
 

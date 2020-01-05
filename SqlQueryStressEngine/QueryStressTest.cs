@@ -1,35 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace SqlQueryStressEngine
 {
-    public class QueryStressTest<TDbProvider> : IQueryStressTest<TDbProvider> where TDbProvider : IQueryWorker
+    public class QueryStressTest
     {
         private IEnumerable<Thread> _threads;
-        private readonly QueryWorkerFactory _queryWorkerFactory;
 
-        public QueryStressTest(QueryStressTestParameters stressTestParameters)
-        {
-            TestParameters = stressTestParameters;
-            _queryWorkerFactory = new QueryWorkerFactory();
-        }
+        public IDbProvider DbProvider { get; set; }
 
-        public QueryStressTestParameters TestParameters { get; }
+        public int ThreadCount { get; set; }
+
+        public int Iterations { get; set; }
+
+        public string Query { get; set; }
+
+        public string ConnectionString { get; set; }
+
+        public Action<QueryExecutionStatistics> OnQueryExecutionComplete { get; set; }
+
+        public IEnumerable<KeyValuePair<string, object>> QueryParameters { get; set; }
 
         public void BeginInvoke()
         {
-            var workers = _queryWorkerFactory.GetQueryWorkers<TDbProvider>(TestParameters.ThreadCount);
-            var workerParameters = QueryWorkerParameters.Build(TestParameters);
+            DbProvider.BeforeTestStart();
+            QueryWorkerParameters workerParameters = GetQueryWorkerParameters();
 
-            var threads = new Thread[TestParameters.ThreadCount];
+            var threads = new Thread[ThreadCount];
 
-            int workerIndex = 0;
-            foreach (var worker in workers)
+            for (int i = 0; i < ThreadCount; i++)
             {
-                var thread = new Thread(() => worker.Start(workerParameters, TestParameters.OnQueryExecutionComplete));
-                threads[workerIndex] = thread;
+                var worker = DbProvider.GetQueryWorker();
+                var thread = new Thread(() => worker.Start(workerParameters, OnQueryExecutionComplete));
+                threads[i] = thread;
                 thread.Start();
-                workerIndex++;
             }
 
             _threads = threads;
@@ -46,6 +51,17 @@ namespace SqlQueryStressEngine
             {
                 t.Join();
             }
+        }
+
+        private QueryWorkerParameters GetQueryWorkerParameters()
+        {
+            return new QueryWorkerParameters()
+            {
+                Iterations = Iterations,
+                ConnectionString = ConnectionString,
+                Query = Query,
+                QueryParameters = QueryParameters
+            };
         }
     }
 }
