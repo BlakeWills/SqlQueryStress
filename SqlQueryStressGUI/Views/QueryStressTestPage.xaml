@@ -19,6 +19,7 @@
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
         <!--TOOLBAR-->
@@ -61,5 +62,6 @@
 
         <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 
+        <Label Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="{Binding Elapsed, StringFormat=hh:mm:ss.fff}" />
     </Grid>
 </Page>

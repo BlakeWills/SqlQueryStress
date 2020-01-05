@@ -15,8 +15,6 @@ namespace SqlQueryStressGUI.ViewModels
         {
             AvailableDbProviders = Enum.GetNames(typeof(DbProvider));
             GoCommandHandler = new CommandHandler(StartQueryStressTest);
-
-            QueryExecutionResults = new ObservableCollection<QueryExecutionStatistics>();
         }
 
         public CommandHandler GoCommandHandler { get; set; }
@@ -51,13 +49,6 @@ namespace SqlQueryStressGUI.ViewModels
             set => SetProperty(value, ref _iterations);
         }
 
-        private ObservableCollection<QueryExecutionStatistics> _queryExecutionResults;
-        public ObservableCollection<QueryExecutionStatistics> QueryExecutionResults
-        {
-            get => _queryExecutionResults;
-            set => SetProperty(value, ref _queryExecutionResults);
-        }
-
         private QueryExecutionStatisticsTable _queryExecutionStatisticsTable;
         public QueryExecutionStatisticsTable QueryExecutionStatisticsTable
         {
@@ -65,8 +56,20 @@ namespace SqlQueryStressGUI.ViewModels
             set => SetProperty(value, ref _queryExecutionStatisticsTable);
         }
 
+        private TimeSpan _elapsed;
+        public TimeSpan Elapsed
+        {
+            get => _elapsed;
+            set => SetProperty(value, ref _elapsed);
+        }
+
         private void StartQueryStressTest(object queryText)
         {
+            var timer = new DispatcherTimer()
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 100)
+            };
+
             var test = new QueryStressTest
             {
                 DbProvider = GetDbProvider(SelectedDbProvider),
@@ -78,8 +81,21 @@ namespace SqlQueryStressGUI.ViewModels
                 {
                     Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
                 },
-                QueryParameters = Array.Empty<KeyValuePair<string, object>>()
+                QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
             };
+
+            test.StressTestComplete += (sender, args) =>
+            {
+                timer.Stop();
+                Elapsed = test.Elapsed;
+            };
+
+            timer.Tick += (sender, args) =>
+            {
+                Elapsed = test.Elapsed;
+            };
+
+            timer.Start();
 
             test.BeginInvoke();
         }
@@ -92,7 +108,7 @@ namespace SqlQueryStressGUI.ViewModels
 
         private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
         {
-            if(QueryExecutionStatisticsTable == null)
+            if (QueryExecutionStatisticsTable == null)
             {
                 QueryExecutionStatisticsTable = QueryExecutionStatisticsTable.CreateFromExecutionResult(executionStatistics);
             }
