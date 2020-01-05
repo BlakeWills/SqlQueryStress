@@ -3,7 +3,7 @@ using SqlQueryStressEngine;
 using SqlQueryStressEngineGUI;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -63,8 +63,19 @@ namespace SqlQueryStressGUI.ViewModels
             set => SetProperty(value, ref _elapsed);
         }
 
+        private TimeSpan _avgExecutionTime;
+        public TimeSpan AverageExecutionTime
+        {
+            get => _avgExecutionTime;
+            set => SetProperty(value, ref _avgExecutionTime);
+        }
+
+        public List<QueryExecutionStatistics> Results { get; private set; }
+
         private void StartQueryStressTest(object queryText)
         {
+            Results = new List<QueryExecutionStatistics>();
+
             var timer = new DispatcherTimer()
             {
                 Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 100)
@@ -108,6 +119,10 @@ namespace SqlQueryStressGUI.ViewModels
 
         private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
         {
+            Results.Add(executionStatistics);
+
+            AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));
+
             if (QueryExecutionStatisticsTable == null)
             {
                 QueryExecutionStatisticsTable = QueryExecutionStatisticsTable.CreateFromExecutionResult(executionStatistics);

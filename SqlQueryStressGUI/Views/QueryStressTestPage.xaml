@@ -62,6 +62,18 @@
 
         <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 
-        <Label Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="{Binding Elapsed, StringFormat=hh:mm:ss.fff}" />
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Content="Mean Execution Time:"/>
+            <Label Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Content="{Binding AverageExecutionTime, StringFormat=hh:mm:ss.fff}"/>
+
+            <Label Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="{Binding Elapsed, StringFormat=hh:mm:ss.fff}" />
+        </Grid>
+        
     </Grid>
 </Page>
