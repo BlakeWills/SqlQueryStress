@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Design", "Design\Design.csproj", "{C5847878-375E-49E6-85DE-AD9535EBCB03}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStressGUI", "SqlQueryStressGUI\SqlQueryStressGUI.csproj", "{0A77D93F-6B2E-48C7-AC99-3E14D7E85ED9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStressEngine", "SqlQueryStressEngine\SqlQueryStressEngine.csproj", "{C3613CAE-9B8F-4447-A450-1E58F2DEFE62}"
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C5847878-375E-49E6-85DE-AD9535EBCB03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5847878-375E-49E6-85DE-AD9535EBCB03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5847878-375E-49E6-85DE-AD9535EBCB03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5847878-375E-49E6-85DE-AD9535EBCB03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A77D93F-6B2E-48C7-AC99-3E14D7E85ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A77D93F-6B2E-48C7-AC99-3E14D7E85ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A77D93F-6B2E-48C7-AC99-3E14D7E85ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
