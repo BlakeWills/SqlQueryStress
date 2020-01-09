@@ -48,18 +48,11 @@
             <Label Content="Iterations" Grid.Column="6" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBox Grid.Column="7" Text="{Binding Path=Iterations}" Padding="5" />
 
-            <Button Content="Go" Grid.Column="8" Padding="5" Margin="10,0,0,0" Command="{Binding GoCommandHandler}" CommandParameter="{Binding ElementName=sqlEditor, Path=Document.Text}" />
+            <Button Content="Go" Grid.Column="8" Padding="5" Margin="10,0,0,0" Command="{Binding GoCommandHandler}" CommandParameter="{Binding ElementName=queryEditor, Path=SelectedQuery}" />
         </Grid>
 
-        <avalonEdit:TextEditor
-            xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-            Name="sqlEditor"
-            Grid.Row="1"
-            FontFamily="Consolas"
-            Padding="5"
-            SyntaxHighlighting="TSQL"
-            FontSize="10pt"/>
-
+        <views:TabbedQueryEditor x:Name="queryEditor" Grid.Row="1" />
+        
         <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 
         <Grid Grid.Row="3">
@@ -74,6 +67,5 @@
 
             <Label Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="{Binding Elapsed, StringFormat=hh:mm:ss.fff}" />
         </Grid>
-        
     </Grid>
 </Page>
