@@ -1,9 +1,14 @@
-﻿<Application x:Class="SqlQueryStressGUI.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SqlQueryStressGUI"
-             StartupUri="MainWindow.xaml">
+﻿<Application
+    x:Class="SqlQueryStressGUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Startup="OnStartup">
+    <!--StartupUri="MainWindow.xaml"-->
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="IconsDictionary" Source="/SqlQueryStressGUI;component/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

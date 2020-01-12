@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <Canvas x:Key="appbar_database" x:Name="appbar_database" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+        <Path Width="34" Height="38" Canvas.Left="21" Canvas.Top="19" Stretch="Fill" Fill="#FF000000" Data="F1 M 38,19C 47.3888,19 55,21.0147 55,23.5038L 55,25.5C 55,27.9853 47.3888,30 38,30C 28.6112,30 21,27.9853 21,25.5L 21,23.5C 21,21.0147 28.6112,19 38,19 Z M 55,52.5C 55,54.9853 47.3888,57 38,57C 28.6112,57 21,54.9853 21,52.5L 21,46.5C 21,48.9853 28.6112,51 38,51C 47.384,51 54.9921,48.9874 55,46.5039L 55,52.5 Z M 55,43.5C 55,45.9853 47.3888,48 38,48C 28.6112,48 21,45.9853 21,43.5L 21,37.5C 21,39.9853 28.6112,42 38,42C 47.384,42 54.9921,39.9874 55,37.5038L 55,43.5 Z M 55,34.5C 55,36.9853 47.3888,39 38,39C 28.6112,39 21,36.9853 21,34.5L 21,28.5C 21,30.9853 28.6112,33 38,33C 47.384,33 54.9921,30.9874 55,28.5038L 55,34.5 Z "/>
+    </Canvas>
+
+    <Canvas x:Name="appbar_control_play" x:Key="appbar_control_play" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+        <Path Width="20.5832" Height="31.6667" Canvas.Left="30.0833" Canvas.Top="22.1667" Stretch="Fill" Fill="#FF000000" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
+    </Canvas>
+
+    <Canvas x:Name="appbar_delete" x:Key="appbar_delete" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+        <Path Width="27.7083" Height="35.625" Canvas.Left="24.1458" Canvas.Top="19.7917" Stretch="Fill" Fill="#FF000000" Data="F1 M 25.3333,23.75L 50.6667,23.75C 51.5411,23.75 51.8541,27.3125 51.8541,27.3125L 24.1458,27.3125C 24.1458,27.3125 24.4589,23.75 25.3333,23.75 Z M 35.625,19.7917L 40.375,19.7917C 40.8122,19.7917 41.9583,20.9378 41.9583,21.375C 41.9583,21.8122 40.8122,22.9584 40.375,22.9584L 35.625,22.9584C 35.1878,22.9584 34.0416,21.8122 34.0416,21.375C 34.0416,20.9378 35.1878,19.7917 35.625,19.7917 Z M 27.7083,28.5L 48.2916,28.5C 49.1661,28.5 49.875,29.2089 49.875,30.0834L 48.2916,53.8334C 48.2916,54.7078 47.5828,55.4167 46.7083,55.4167L 29.2917,55.4167C 28.4172,55.4167 27.7083,54.7078 27.7083,53.8334L 26.125,30.0834C 26.125,29.2089 26.8339,28.5 27.7083,28.5 Z M 30.0833,31.6667L 30.4792,52.25L 33.25,52.25L 32.8542,31.6667L 30.0833,31.6667 Z M 36.4167,31.6667L 36.4167,52.25L 39.5833,52.25L 39.5833,31.6667L 36.4167,31.6667 Z M 43.1458,31.6667L 42.75,52.25L 45.5208,52.25L 45.9167,31.6667L 43.1458,31.6667 Z "/>
+    </Canvas>
+
+    <Canvas x:Name="appbar_edit" x:Key="appbar_edit" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+        <Path Width="34.9788" Height="34.9788" Canvas.Left="21.0463" Canvas.Top="19.9749" Stretch="Fill" Fill="#FF000000" Data="F1 M 53.2929,21.2929L 54.7071,22.7071C 56.4645,24.4645 56.4645,27.3137 54.7071,29.0711L 52.2323,31.5459L 44.4541,23.7677L 46.9289,21.2929C 48.6863,19.5355 51.5355,19.5355 53.2929,21.2929 Z M 31.7262,52.052L 23.948,44.2738L 43.0399,25.182L 50.818,32.9601L 31.7262,52.052 Z M 23.2409,47.1023L 28.8977,52.7591L 21.0463,54.9537L 23.2409,47.1023 Z "/>
+    </Canvas>
+
+    <Canvas x:Name="appbar_page_new" x:Key="appbar_page_new" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+        <Path Width="40.0205" Height="45.0757" Canvas.Left="20" Canvas.Top="17" Stretch="Fill" Fill="#FF000000" Data="F1 M 51.5487,37.9814L 56.814,41.0534L 50.3383,48.7636L 50.3383,48.8841L 60.0205,46.9565L 60.0205,53.0403L 50.2777,51.414L 50.2777,51.5344L 56.814,59.0037L 51.4882,62.0757L 47.978,52.7994L 47.8569,52.7994L 44.4072,62.0757L 39.2025,59.0037L 45.6782,51.4742L 45.6177,51.3537L 36.1159,53.0403L 36.1159,46.9565L 45.5571,48.8841L 45.5571,48.7636L 39.2025,41.1137L 44.5888,37.9814L 47.9174,47.3179L 48.0385,47.3179L 51.5487,37.9814 Z M 20,17L 43.25,17L 56,29.75L 56,39L 52,36.75L 52,34L 39,34L 39,21L 24,21L 24,55L 41,55L 37.5,59L 20,59L 20,17 Z M 43,22.25L 43,30L 50.75,30L 43,22.25 Z "/>
+    </Canvas>
+
+</ResourceDictionary>

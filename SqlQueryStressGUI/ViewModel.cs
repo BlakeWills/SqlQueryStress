@@ -14,11 +14,8 @@ namespace SqlQueryStressGUI
 
         protected void SetProperty<T>(T value, ref T field, [CallerMemberName] string propertyName = "")
         {
-            if (!value.Equals(field))
-            {
-                field = value;
-                NotifyPropertyChanged(propertyName);
-            }
+            field = value;
+            NotifyPropertyChanged(propertyName);
         }
     }
 }

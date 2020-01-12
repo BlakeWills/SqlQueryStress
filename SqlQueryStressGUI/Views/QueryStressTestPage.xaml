@@ -3,17 +3,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:vms="clr-namespace:SqlQueryStressGUI.ViewModels"
+      xmlns:designContexts="clr-namespace:SqlQueryStressGUI.DesignTimeContexts"
       xmlns:views="clr-namespace:SqlQueryStressGUI.Views"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      d:DataContext="{x:Static designContexts:DesignContexts.QueryStressTestContext}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1000"
       Title="QueryStressTestPage">
-    <Page.Resources>
-        <vms:QueryStressTestViewModel x:Key="binding"/>
-    </Page.Resources>
-    <Page.DataContext>
-        <Binding Source="{StaticResource binding}"/>
-    </Page.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
@@ -22,8 +18,53 @@
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
+        <ToolBarTray Grid.Row="0">
+            <ToolBar>
+                <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
+                    <TextBlock Text="Connection" VerticalAlignment="Center" />
+                    <ComboBox
+                        Grid.Column="1"
+                        ItemsSource="{Binding Path=Connections}"
+                        SelectedItem="{Binding Path=SelectedConnection}"
+                        DisplayMemberPath="Name"
+                        Padding="5"
+                        Width="150"
+                        Margin="5,0,0,0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DropDownClosed">
+                                <i:InvokeCommandAction Command="{Binding ConnectionChangedCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <TextBlock Text="Threads" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBox Text="{Binding Path=ThreadCount}" Padding="5" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <TextBlock Text="Iterations" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBox Text="{Binding Path=Iterations}" Padding="5" />
+                </StackPanel>
+                
+                <Separator Margin="5,0,5,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+
+                <Button Margin="0,0,5,0" Command="{Binding GoCommandHandler}" CommandParameter="{Binding ElementName=queryEditor, Path=SelectedQuery}">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Height="18" Width="16" Fill="Green" >
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_play}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <TextBlock Margin="5,0,5,0" Text="Execute" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
         <!--TOOLBAR-->
-        <Grid Grid.Row="0" Margin="5">
+        <!--<Grid Grid.Row="0" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="100"/>
@@ -49,10 +90,10 @@
             <TextBox Grid.Column="7" Text="{Binding Path=Iterations}" Padding="5" />
 
             <Button Content="Go" Grid.Column="8" Padding="5" Margin="10,0,0,0" Command="{Binding GoCommandHandler}" CommandParameter="{Binding ElementName=queryEditor, Path=SelectedQuery}" />
-        </Grid>
+        </Grid>-->
 
         <views:TabbedQueryEditor x:Name="queryEditor" Grid.Row="1" />
-        
+
         <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 
         <Grid Grid.Row="3">

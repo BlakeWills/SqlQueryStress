@@ -8,10 +8,10 @@ namespace SqlQueryStressGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(QueryStressTestPage queryStressTestPage)
         {
             InitializeComponent();
-            Content = new QueryStressTestPage();
+            Content = queryStressTestPage;
         }
     }
 }

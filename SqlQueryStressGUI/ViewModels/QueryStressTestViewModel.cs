@@ -1,8 +1,11 @@
-﻿using SqlQueryStress.DbProviders.MSSQL;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SqlQueryStress.DbProviders.MSSQL;
 using SqlQueryStressEngine;
 using SqlQueryStressEngineGUI;
+using SqlQueryStressGUI.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -11,28 +14,41 @@ namespace SqlQueryStressGUI.ViewModels
 {
     public sealed class QueryStressTestViewModel : ViewModel
     {
-        public QueryStressTestViewModel()
+        private const string _connectionManagerText = "Connection Manager...";
+        private readonly IConnectionProvider _connectionProvider;
+
+        public QueryStressTestViewModel(IConnectionProvider connectionProvider)
         {
-            AvailableDbProviders = Enum.GetNames(typeof(DbProvider));
+            _connectionProvider = connectionProvider;
+            _connectionProvider.ConnectionsChanged += (sender, args) =>
+            {
+                Connections = BuildConnectionList(args.Connections);
+            };
+
+            Connections = BuildConnectionList(_connectionProvider.GetConnections());
+
+            SelectedConnection = Connections.First();
+
             GoCommandHandler = new CommandHandler(StartQueryStressTest);
+            ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
         }
 
         public CommandHandler GoCommandHandler { get; set; }
 
-        public IEnumerable<string> AvailableDbProviders { get; }
+        public CommandHandler ConnectionChangedCommand { get; set; }
 
-        private DbProvider _selectedDbProvider;
-        public DbProvider SelectedDbProvider
+        private ObservableCollection<DatabaseConnection> _connections;
+        public ObservableCollection<DatabaseConnection> Connections
         {
-            get => _selectedDbProvider;
-            set => SetProperty(value, ref _selectedDbProvider);
+            get => _connections;
+            set => SetProperty(value, ref _connections);
         }
 
-        private string _connectionString;
-        public string ConnectionString
+        private DatabaseConnection _selectedConnection;
+        public DatabaseConnection SelectedConnection
         {
-            get => _connectionString;
-            set => SetProperty(value, ref _connectionString);
+            get => _selectedConnection;
+            set => SetProperty(value, ref _selectedConnection);
         }
 
         private int _threadCount;
@@ -102,11 +118,11 @@ namespace SqlQueryStressGUI.ViewModels
 
         private QueryStressTest BuildQueryStressTest(string queryText) => new QueryStressTest
         {
-            DbProvider = GetDbProvider(SelectedDbProvider),
+            DbProvider = GetDbProvider(SelectedConnection.DbProvider),
             ThreadCount = ThreadCount,
             Iterations = Iterations,
             Query = queryText,
-            ConnectionString = ConnectionString,
+            ConnectionString = SelectedConnection.ConnectionString,
             QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
             OnQueryExecutionComplete = (result) =>
             {
@@ -135,6 +151,27 @@ namespace SqlQueryStressGUI.ViewModels
             {
                 QueryExecutionStatisticsTable.AddRow(executionStatistics);
             }
+        }
+
+        private void OnConnectionChanged()
+        {
+            if(SelectedConnection.Name == _connectionManagerText)
+            {
+                OpenConnectionManager();
+            }
+        }
+
+        private void OpenConnectionManager()
+        {
+            SelectedConnection = default;
+
+            var conManager = DiContainer.Instance.ServiceProvider.GetRequiredService<ConnectionManager>();
+            conManager.ShowDialog();
+        }
+
+        private ObservableCollection<DatabaseConnection> BuildConnectionList(IEnumerable<DatabaseConnection> connections)
+        {
+            return new ObservableCollection<DatabaseConnection>(connections.Append(new DatabaseConnection { Name = _connectionManagerText }));
         }
     }
 }

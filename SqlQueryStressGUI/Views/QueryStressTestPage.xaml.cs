@@ -8,8 +8,9 @@ namespace SqlQueryStressGUI.Views
     /// </summary>
     public partial class QueryStressTestPage : Page
     {
-        public QueryStressTestPage()
+        public QueryStressTestPage(QueryStressTestViewModel queryStressTestViewModel)
         {
+            DataContext = queryStressTestViewModel;
             InitializeComponent();
         }
     }

@@ -1,0 +1,67 @@
+﻿<Window x:Class="SqlQueryStressGUI.Views.ConnectionManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Name="connectionManagerWindow"
+        d:DataContext="designContext.DesignContexts.ConnectionManagerContext"
+        mc:Ignorable="d"
+        Title="Connection Manager" Height="450" Width="650">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" HorizontalAlignment="Right" Margin="0,10,0,10" Command="{Binding NewConnectionCommand}">
+            <Rectangle Height="18" Width="16" Fill="Black">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_new}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+        </Button>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Connections}" VerticalAlignment="Top" AutoGenerateColumns="False" IsReadOnly="True" Height="300" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Width="480" Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="DB Provider" Binding="{Binding DbProvider}" IsReadOnly="True" />
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Margin="0,0,5,0"
+                                    Command="{Binding ElementName=connectionManagerWindow, Path=DataContext.EditConnectionCommand}"
+                                    CommandParameter="{Binding}">
+                                <Rectangle Height="18" Width="16" Fill="Black" >
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_edit}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Margin="0,0,5,0"
+                                    Command="{Binding ElementName=connectionManagerWindow, Path=DataContext.DeleteConnectionCommand}"
+                                    CommandParameter="{Binding}">
+                                <Rectangle Height="18" Width="16" Fill="Black" >
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Content="Close" Width="100" HorizontalAlignment="Right" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=connectionManagerWindow}"/>
+    </Grid>
+</Window>
