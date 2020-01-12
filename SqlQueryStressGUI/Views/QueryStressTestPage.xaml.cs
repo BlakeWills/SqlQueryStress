@@ -13,5 +13,10 @@ namespace SqlQueryStressGUI.Views
             DataContext = queryStressTestViewModel;
             InitializeComponent();
         }
+
+        private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out int _);
+        }
     }
 }
