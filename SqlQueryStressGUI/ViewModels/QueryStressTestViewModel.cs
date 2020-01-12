@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SqlQueryStress.DbProviders.MSSQL;
 using SqlQueryStressEngine;
 using SqlQueryStressEngineGUI;
 using SqlQueryStressGUI.Views;
@@ -16,26 +15,41 @@ namespace SqlQueryStressGUI.ViewModels
     {
         private const string _connectionManagerText = "Connection Manager...";
         private readonly IConnectionProvider _connectionProvider;
+        private readonly DbProviderFactory _dbProviderFactory;
+        private readonly DbCommandProvider _dbCommandProvider;
 
-        public QueryStressTestViewModel(IConnectionProvider connectionProvider)
+        public QueryStressTestViewModel(
+            IConnectionProvider connectionProvider,
+            DbProviderFactory dbProviderFactory,
+            DbCommandProvider dbCommandProvider)
         {
             _connectionProvider = connectionProvider;
+            _dbProviderFactory = dbProviderFactory;
+            _dbCommandProvider = dbCommandProvider;
+
             _connectionProvider.ConnectionsChanged += (sender, args) =>
             {
                 Connections = BuildConnectionList(args.Connections);
+                SelectedConnection = Connections.First();
             };
 
             Connections = BuildConnectionList(_connectionProvider.GetConnections());
-
             SelectedConnection = Connections.First();
+            OnConnectionChanged();
 
-            GoCommandHandler = new CommandHandler(StartQueryStressTest);
+            GoCommandHandler = new CommandHandler(StartQueryStressTest, canExecute: (_) => IsConnectionValid());
+            ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
+            DbCommandSelected = new CommandHandler((dbCommand) => InvokeDbCommand((DbCommand)dbCommand));
         }
 
-        public CommandHandler GoCommandHandler { get; set; }
+        public CommandHandler GoCommandHandler { get; }
 
-        public CommandHandler ConnectionChangedCommand { get; set; }
+        public CommandHandler ConnectionChangedCommand { get; }
+
+        public CommandHandler ConnectionDropdownClosedCommand { get; }
+
+        public CommandHandler DbCommandSelected { get; }
 
         private ObservableCollection<DatabaseConnection> _connections;
         public ObservableCollection<DatabaseConnection> Connections
@@ -48,7 +62,11 @@ namespace SqlQueryStressGUI.ViewModels
         public DatabaseConnection SelectedConnection
         {
             get => _selectedConnection;
-            set => SetProperty(value, ref _selectedConnection);
+            set
+            {
+                SetProperty(value, ref _selectedConnection);
+                RaiseCanExecuteChanged();
+            }
         }
 
         private int _threadCount;
@@ -63,6 +81,13 @@ namespace SqlQueryStressGUI.ViewModels
         {
             get => _iterations;
             set => SetProperty(value, ref _iterations);
+        }
+
+        private IEnumerable<DbCommand> _dbCommands;
+        public IEnumerable<DbCommand> DbCommands
+        {
+            get => _dbCommands;
+            set => SetProperty(value, ref _dbCommands);
         }
 
         private QueryExecutionStatisticsTable _queryExecutionStatisticsTable;
@@ -118,7 +143,7 @@ namespace SqlQueryStressGUI.ViewModels
 
         private QueryStressTest BuildQueryStressTest(string queryText) => new QueryStressTest
         {
-            DbProvider = GetDbProvider(SelectedConnection.DbProvider),
+            DbProvider = _dbProviderFactory.GetDbProvider(SelectedConnection.DbProvider),
             ThreadCount = ThreadCount,
             Iterations = Iterations,
             Query = queryText,
@@ -128,12 +153,6 @@ namespace SqlQueryStressGUI.ViewModels
             {
                 Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
             }
-        };
-
-        private IDbProvider GetDbProvider(DbProvider dbProvider) => dbProvider switch
-        {
-            DbProvider.MSSQL => new MssqlDbProvider(),
-            _ => throw new ArgumentException()
         };
 
         private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
@@ -153,25 +172,51 @@ namespace SqlQueryStressGUI.ViewModels
             }
         }
 
-        private void OnConnectionChanged()
+        private void OnConnectionDropdownClosed()
         {
             if(SelectedConnection.Name == _connectionManagerText)
             {
-                OpenConnectionManager();
+                SelectedConnection = Connections.First();
+
+                var conManager = DiContainer.Instance.ServiceProvider.GetRequiredService<ConnectionManager>();
+                conManager.ShowDialog();
             }
         }
 
-        private void OpenConnectionManager()
+        private void OnConnectionChanged()
         {
-            SelectedConnection = default;
-
-            var conManager = DiContainer.Instance.ServiceProvider.GetRequiredService<ConnectionManager>();
-            conManager.ShowDialog();
+            if (IsConnectionValid())
+            {
+                DbCommands = _dbCommandProvider.GetDbCommands(SelectedConnection.DbProvider);
+            }
+            else
+            {
+                DbCommands = Array.Empty<DbCommand>();
+            }
         }
 
         private ObservableCollection<DatabaseConnection> BuildConnectionList(IEnumerable<DatabaseConnection> connections)
         {
-            return new ObservableCollection<DatabaseConnection>(connections.Append(new DatabaseConnection { Name = _connectionManagerText }));
+            return new ObservableCollection<DatabaseConnection>(connections.Append(new DatabaseConnection
+            {
+                Name = _connectionManagerText,
+                DbProvider = DbProvider.NotSpecified
+            }));
+        }
+
+        private void InvokeDbCommand(DbCommand command)
+        {
+            command.Command(SelectedConnection);
+        }
+
+        private bool IsConnectionValid()
+        {
+            return SelectedConnection != null && SelectedConnection.DbProvider != DbProvider.NotSpecified;
+        }
+
+        private void RaiseCanExecuteChanged()
+        {
+            GoCommandHandler?.RaiseCanExecuteChanged();
         }
     }
 }

@@ -6,11 +6,17 @@
       xmlns:designContexts="clr-namespace:SqlQueryStressGUI.DesignTimeContexts"
       xmlns:views="clr-namespace:SqlQueryStressGUI.Views"
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:ext="clr-namespace:System.Windows.Controls.Extensions"
+      xmlns:sqs="clr-namespace:SqlQueryStressGUI"
       d:DataContext="{x:Static designContexts:DesignContexts.QueryStressTestContext}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1000"
+      x:Name="queryStressTestPage"
       Title="QueryStressTestPage">
     <Grid>
+        <Grid.Resources>
+            <sqs:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
@@ -32,6 +38,9 @@
                         Margin="5,0,0,0">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="DropDownClosed">
+                                <i:InvokeCommandAction Command="{Binding ConnectionDropdownClosedCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding ConnectionChangedCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
@@ -60,37 +69,26 @@
                         <TextBlock Margin="5,0,5,0" Text="Execute" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
+
+                <Separator Margin="5,0,5,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+
+                <ext:DropdownButton>
+                    <ext:DropdownButton.Content>
+                        Database Commands
+                    </ext:DropdownButton.Content>
+                    <ext:DropdownButton.DropdownMenu>
+                        <ContextMenu ItemsSource="{Binding DbCommands}" DisplayMemberPath="Name">
+                            <ContextMenu.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Command" Value="{Binding Source={StaticResource Proxy}, Path=Data.DbCommandSelected}" />
+                                    <Setter Property="CommandParameter" Value="{Binding}" />
+                                </Style>
+                            </ContextMenu.ItemContainerStyle>
+                        </ContextMenu>
+                    </ext:DropdownButton.DropdownMenu>
+                </ext:DropdownButton>
             </ToolBar>
         </ToolBarTray>
-
-        <!--TOOLBAR-->
-        <!--<Grid Grid.Row="0" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="300"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="75"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="75"/>
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
-
-            <Label Content="DbProvider" Grid.Column="0" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <ComboBox Grid.Column="1" ItemsSource="{Binding Path=AvailableDbProviders}" SelectedItem="{Binding Path=SelectedDbProvider}" Padding="5" />
-
-            <Label Content="Connection String" Grid.Column="2" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="3" Text="{Binding Path=ConnectionString}" Padding="5" />
-
-            <Label Content="Threads" Grid.Column="4" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="5" Text="{Binding Path=ThreadCount}" Padding="5" />
-
-            <Label Content="Iterations" Grid.Column="6" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="7" Text="{Binding Path=Iterations}" Padding="5" />
-
-            <Button Content="Go" Grid.Column="8" Padding="5" Margin="10,0,0,0" Command="{Binding GoCommandHandler}" CommandParameter="{Binding ElementName=queryEditor, Path=SelectedQuery}" />
-        </Grid>-->
 
         <views:TabbedQueryEditor x:Name="queryEditor" Grid.Row="1" />
 

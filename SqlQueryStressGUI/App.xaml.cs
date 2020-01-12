@@ -42,6 +42,9 @@ namespace SqlQueryStressGUI
             services.AddTransient<QueryStressTestViewModel>();
             services.AddTransient<ConnectionManagerViewModel>();
             services.AddTransient<AddEditConnectionViewModel>();
+
+            services.AddTransient<DbProviderFactory>();
+            services.AddTransient<DbCommandProvider>();
         }
     }
 }

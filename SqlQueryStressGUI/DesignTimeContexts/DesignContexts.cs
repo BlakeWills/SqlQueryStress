@@ -6,8 +6,12 @@ namespace SqlQueryStressGUI.DesignTimeContexts
     {
         private static IConnectionProvider _connectionProvider = new FakeConnectionProvider();
 
+        private static DbProviderFactory _dbProviderFactory = new DbProviderFactory();
+
+        private static DbCommandProvider _dbCommandProvider = new DbCommandProvider(_dbProviderFactory);
+
         public static QueryStressTestViewModel QueryStressTestContext =>
-            new QueryStressTestViewModel(_connectionProvider);
+            new QueryStressTestViewModel(_connectionProvider, _dbProviderFactory, _dbCommandProvider);
 
         public static ConnectionManagerViewModel ConnectionManagerContext =>
             new ConnectionManagerViewModel(_connectionProvider);

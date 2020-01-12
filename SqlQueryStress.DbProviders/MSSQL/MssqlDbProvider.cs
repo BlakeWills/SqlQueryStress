@@ -1,4 +1,5 @@
 ﻿using SqlQueryStressEngine;
+using System.Collections.Generic;
 
 namespace SqlQueryStress.DbProviders.MSSQL
 {
@@ -7,5 +8,7 @@ namespace SqlQueryStress.DbProviders.MSSQL
         public void BeforeTestStart() { }
 
         public IQueryWorker GetQueryWorker() => new MssqlQueryWorker();
+
+        public IEnumerable<IDbCommand> GetDbCommands() => new IDbCommand[] { new FreeProcCacheDbCommand(), new DropBuffersDbCommand() };
     }
 }

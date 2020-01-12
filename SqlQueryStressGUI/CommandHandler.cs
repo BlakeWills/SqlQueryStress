@@ -1,21 +1,34 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Input;
 
 namespace SqlQueryStressGUI
 {
     public class CommandHandler : ICommand
     {
-        private Action<object> _action;
+        private readonly Action<object> _action;
+        private readonly Func<object, bool> _canExecute;
 
         public CommandHandler(Action<object> action)
         {
             _action = action;
         }
 
+        public CommandHandler(Action<object> action, Func<object, bool> canExecute)
+        {
+            _action = action;
+            _canExecute = canExecute;
+        }
+
         public bool CanExecute(object parameter)
         {
-            return Enabled;
+            if(_canExecute != null)
+            {
+                return _canExecute(parameter);
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public event EventHandler CanExecuteChanged;
@@ -25,22 +38,9 @@ namespace SqlQueryStressGUI
             _action(parameter);
         }
 
-        private bool _enabled = true;
-        public bool Enabled
+        public void RaiseCanExecuteChanged()
         {
-            get => _enabled;
-            set
-            {
-                if (_enabled != value)
-                {
-                    _enabled = value;
-
-                    if (CanExecuteChanged != null)
-                    {
-                        Application.Current.Dispatcher.Invoke(new Action(() => CanExecuteChanged(this, null)));
-                    }
-                }
-            }
+            CanExecuteChanged?.Invoke(this, new EventArgs());
         }
     }
 }
