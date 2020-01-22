@@ -37,9 +37,9 @@ namespace SqlQueryStress.DbProviders.MSSQL
                     builder.LogicalReads = result.LogicalReads;
                 };
 
-                foreach (var param in workerParameters.QueryParameters)
+                foreach (var param in workerParameters.QueryParameters.Parameters)
                 {
-                    cmd.Parameters.AddWithValue(param.Key, param.Value);
+                    cmd.Parameters.AddWithValue(param.Name, param.Value);
                 }
 
                 var sw = Stopwatch.StartNew();

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SqlQueryStressGUI.ViewModels;
 using SqlQueryStressGUI.Views;
+using SqlQueryStressGUI.Views.ParameterSettings;
 using System;
 using System.Windows;
 
@@ -38,6 +39,12 @@ namespace SqlQueryStressGUI
             services.AddTransient<QueryStressTestPage>();
             services.AddTransient<ConnectionManager>();
             services.AddTransient<ConnectionWindowFactory>();
+            services.AddTransient<ParameterWindowBuilder>();
+
+            services.AddTransient<QueryParameterViewModel>();
+            services.AddTransient<QueryParameterSettingsFactory>();
+            services.AddTransient<QueryParameterSettingsViewFactory>();
+            services.AddTransient<ParameterSettingsWindow>();
 
             services.AddTransient<QueryStressTestViewModel>();
             services.AddTransient<ConnectionManagerViewModel>();
@@ -45,6 +52,7 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<DbProviderFactory>();
             services.AddTransient<DbCommandProvider>();
+            services.AddTransient<QueryParameterViewModelBuilder>();
         }
     }
 }

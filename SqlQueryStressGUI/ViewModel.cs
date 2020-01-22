@@ -17,5 +17,7 @@ namespace SqlQueryStressGUI
             field = value;
             NotifyPropertyChanged(propertyName);
         }
+
+        public virtual void Close(ICloseable closeable) => closeable.Close();
     }
 }

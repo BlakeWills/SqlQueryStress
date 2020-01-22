@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using SqlQueryStressEngine;
+using SqlQueryStressEngine.Parameters;
 using SqlQueryStressEngine.Tests.Unit.Fakes;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace SqlQueryStress.Tests.Unit
                 Iterations = iterations,
                 DbProvider = new FakeDbProvider(),
                 Query = _query,
-                QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
+                QueryParameters = Array.Empty<ParameterSet>(),
                 OnQueryExecutionComplete = (executionStats) => {
                     Interlocked.Increment(ref onQueryExecutionInvocations);
                 }

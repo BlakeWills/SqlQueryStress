@@ -36,6 +36,7 @@
             Width="100"
             Height="30"
             HorizontalAlignment="Right" 
+            VerticalAlignment="Bottom"
             Command="{Binding SaveAndCloseCommand}"
             CommandParameter="{Binding ElementName=window}"/>
     </Grid>

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SqlQueryStressEngine.Parameters;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace SqlQueryStressEngine
@@ -24,7 +26,7 @@ namespace SqlQueryStressEngine
 
         public Action<QueryExecutionStatistics> OnQueryExecutionComplete { get; set; }
 
-        public IEnumerable<KeyValuePair<string, object>> QueryParameters { get; set; }
+        public IEnumerable<ParameterSet> QueryParameters { get; set; }
 
         public event EventHandler StressTestComplete;
 
@@ -50,10 +52,8 @@ namespace SqlQueryStressEngine
             SetIsRunning();
 
             DbProvider.BeforeTestStart();
-
-            var workerParameters = GetQueryWorkerParameters();
-            _threads = GetWorkerThreads(workerParameters);
-
+            
+            _threads = GetWorkerThreads();
             _stopwatch = Stopwatch.StartNew();
 
             for (int i = 0; i < ThreadCount; i++)
@@ -62,13 +62,15 @@ namespace SqlQueryStressEngine
             }
         }
 
-        private Thread[] GetWorkerThreads(QueryWorkerParameters workerParameters)
+        private Thread[] GetWorkerThreads()
         {
             var threads = new Thread[ThreadCount];
 
             for (int i = 0; i < ThreadCount; i++)
             {
                 var worker = DbProvider.GetQueryWorker();
+                var workerParameters = GetQueryWorkerParameters(i);
+
                 var thread = new Thread(() =>
                 {
                     worker.Start(workerParameters, OnQueryExecutionComplete);
@@ -102,14 +104,16 @@ namespace SqlQueryStressEngine
             }
         }
 
-        private QueryWorkerParameters GetQueryWorkerParameters()
+        private QueryWorkerParameters GetQueryWorkerParameters(int workerId)
         {
+            var parameters = QueryParameters.Any() ? QueryParameters.ElementAt(workerId) : new ParameterSet();
+
             return new QueryWorkerParameters()
             {
                 Iterations = Iterations,
                 ConnectionString = ConnectionString,
                 Query = Query,
-                QueryParameters = QueryParameters
+                QueryParameters = parameters
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using SqlQueryStressEngine.Parameters;
 
 namespace SqlQueryStressEngine
 {
@@ -10,6 +10,6 @@ namespace SqlQueryStressEngine
 
         public string Query { get; set; }
 
-        public IEnumerable<KeyValuePair<string, object>> QueryParameters { get; set; }
+        public ParameterSet QueryParameters { get; set; }
     }
 }

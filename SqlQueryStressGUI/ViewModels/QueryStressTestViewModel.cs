@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SqlQueryStressEngine;
+using SqlQueryStressEngine.Parameters;
 using SqlQueryStressEngineGUI;
 using SqlQueryStressGUI.Views;
 using System;
@@ -17,15 +18,21 @@ namespace SqlQueryStressGUI.ViewModels
         private readonly IConnectionProvider _connectionProvider;
         private readonly DbProviderFactory _dbProviderFactory;
         private readonly DbCommandProvider _dbCommandProvider;
+        private readonly QueryParameterViewModelBuilder _queryParameterViewModelBuilder;
+        private readonly ParameterWindowBuilder _parameterWindowBuilder;
 
         public QueryStressTestViewModel(
             IConnectionProvider connectionProvider,
             DbProviderFactory dbProviderFactory,
-            DbCommandProvider dbCommandProvider)
+            DbCommandProvider dbCommandProvider,
+            QueryParameterViewModelBuilder queryParameterViewModelBuilder,
+            ParameterWindowBuilder parameterWindowBuilder)
         {
             _connectionProvider = connectionProvider;
             _dbProviderFactory = dbProviderFactory;
             _dbCommandProvider = dbCommandProvider;
+            _queryParameterViewModelBuilder = queryParameterViewModelBuilder;
+            _parameterWindowBuilder = parameterWindowBuilder;
 
             _connectionProvider.ConnectionsChanged += (sender, args) =>
             {
@@ -37,10 +44,13 @@ namespace SqlQueryStressGUI.ViewModels
             SelectedConnection = Connections.First();
             OnConnectionChanged();
 
+            QueryParameters = new List<QueryParameterViewModel>();
+
             GoCommandHandler = new CommandHandler(StartQueryStressTest, canExecute: (_) => IsConnectionValid());
             ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
             DbCommandSelected = new CommandHandler((dbCommand) => InvokeDbCommand((DbCommand)dbCommand));
+            ParameterSettingsCommand = new CommandHandler((query) => OpenParameterSettings((string)query));
         }
 
         public CommandHandler GoCommandHandler { get; }
@@ -50,6 +60,8 @@ namespace SqlQueryStressGUI.ViewModels
         public CommandHandler ConnectionDropdownClosedCommand { get; }
 
         public CommandHandler DbCommandSelected { get; }
+
+        public CommandHandler ParameterSettingsCommand { get; set; }
 
         private ObservableCollection<DatabaseConnection> _connections;
         public ObservableCollection<DatabaseConnection> Connections
@@ -88,6 +100,13 @@ namespace SqlQueryStressGUI.ViewModels
         {
             get => _dbCommands;
             set => SetProperty(value, ref _dbCommands);
+        }
+
+        private List<QueryParameterViewModel> _queryParameters;
+        public List<QueryParameterViewModel> QueryParameters
+        {
+            get => _queryParameters;
+            set => SetProperty(value, ref _queryParameters);
         }
 
         private QueryExecutionStatisticsTable _queryExecutionStatisticsTable;
@@ -148,12 +167,21 @@ namespace SqlQueryStressGUI.ViewModels
             Iterations = Iterations,
             Query = queryText,
             ConnectionString = SelectedConnection.ConnectionString,
-            QueryParameters = Array.Empty<KeyValuePair<string, object>>(),
+            QueryParameters = GetParameterSets(),
             OnQueryExecutionComplete = (result) =>
             {
                 Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
             }
         };
+
+        private IEnumerable<ParameterSet> GetParameterSets()
+        {
+            var paramProvider = new ParameterProvider();
+            var executions = ThreadCount * Iterations;
+            var paramValueBuilders = QueryParameters.Select(x => x.Settings.GetParameterValueBuilder(x.Name));
+
+            return paramProvider.GetParameterSets(paramValueBuilders, executions);
+        }
 
         private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
         {
@@ -217,6 +245,21 @@ namespace SqlQueryStressGUI.ViewModels
         private void RaiseCanExecuteChanged()
         {
             GoCommandHandler?.RaiseCanExecuteChanged();
+        }
+
+        private void OpenParameterSettings(string query)
+        {
+            UpdateQueryParameters(query);
+
+            var window = _parameterWindowBuilder.Build(QueryParameters);
+            window.ShowDialog();
+        }
+
+        private void UpdateQueryParameters(string query)
+        {
+            var queryParams = QueryParameters.ToList();
+            _queryParameterViewModelBuilder.UpdateQueryParameterViewModels(query, ref queryParams);
+            QueryParameters = queryParams;
         }
     }
 }

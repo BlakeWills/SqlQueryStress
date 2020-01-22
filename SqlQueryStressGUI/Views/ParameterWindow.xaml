@@ -1,0 +1,45 @@
+﻿<Window x:Class="SqlQueryStressGUI.Views.ParameterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        d:DataContext="designContext.DesignContexts.AddEditConnectionContext"
+        mc:Ignorable="d"
+        x:Name="parameterWindow"
+        Title="Parameters" Height="450" Width="650">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding QueryParameters}" VerticalAlignment="Top" AutoGenerateColumns="False" IsReadOnly="True" Height="300" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding Type}" ItemsSource="{Binding ParameterTypes}" Width="200" />
+
+                <DataGridTemplateColumn Header="" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Margin="0,0,5,0"
+                                    Command="{Binding ElementName=parameterWindow, Path=DataContext.SettingsCommand}"
+                                    CommandParameter="{Binding}">
+                                <TextBlock Text="Settings"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button
+            Grid.Row="1"
+            Content="Save"
+            Width="100"
+            Height="30"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Command="{Binding SaveAndCloseCommand}"
+            CommandParameter="{Binding ElementName=parameterWindow}"/>
+    </Grid>
+</Window>

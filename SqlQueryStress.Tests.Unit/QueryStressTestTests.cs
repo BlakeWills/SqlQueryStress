@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SqlQueryStressEngine;
+using SqlQueryStressEngine.Parameters;
 using SqlQueryStressEngine.Tests.Unit.Fakes;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace SqlQueryStress.Tests.Unit
                 DbProvider = new FakeDbProvider(),
                 Query = _query,
                 OnQueryExecutionComplete = (_) => { },
-                QueryParameters = Array.Empty<KeyValuePair<string, object>>()
+                QueryParameters = Array.Empty<ParameterSet>()
             };
         }
 
