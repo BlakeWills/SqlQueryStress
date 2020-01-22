@@ -27,8 +27,8 @@ namespace SqlQueryStressGUI.ViewModels
 
         public string Name { get; set; }
 
-        private ParameterType _parameterType;
-        public ParameterType Type
+        private string _parameterType;
+        public string Type
         {
             get => _parameterType;
             set
@@ -53,7 +53,7 @@ namespace SqlQueryStressGUI.ViewModels
 
         private void SetSettingsPanelContent()
         {
-            Settings = _queryParameterSettingsFactory.GetQueryParameterSettings(Type);
+            Settings = _queryParameterSettingsFactory.GetQueryParameterSettings((ParameterType)Enum.Parse(typeof(ParameterType), Type));
             SettingsPanelContent = _queryParameterSettingsViewFactory.GetQueryParameterSettingsView(Settings);
         }
     }

@@ -16,7 +16,7 @@
         <DataGrid Grid.Row="1" ItemsSource="{Binding QueryParameters}" VerticalAlignment="Top" AutoGenerateColumns="False" IsReadOnly="True" Height="300" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Name}" IsReadOnly="True"/>
-                <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding Type}" ItemsSource="{Binding ParameterTypes}" Width="200" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="200" IsReadOnly="True" />
 
                 <DataGridTemplateColumn Header="" Width="*">
                     <DataGridTemplateColumn.CellTemplate>

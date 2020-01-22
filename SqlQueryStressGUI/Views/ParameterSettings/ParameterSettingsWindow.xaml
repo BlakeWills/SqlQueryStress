@@ -19,7 +19,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Type"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ParameterTypes}" SelectedItem="{Binding Type}" />
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ParameterTypes}" SelectedItem="{Binding Type, Mode=TwoWay}" />
 
         <ScrollViewer Content="{Binding SettingsPanelContent}" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,10"/>
 
