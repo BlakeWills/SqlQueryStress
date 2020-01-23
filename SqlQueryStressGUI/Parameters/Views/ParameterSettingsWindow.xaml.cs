@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SqlQueryStressGUI.Views.ParameterSettings
+namespace SqlQueryStressGUI.Parameters.Views
 {
     /// <summary>
     /// Interaction logic for ParameterSettingsWindow.xaml

@@ -1,6 +1,5 @@
 ﻿using SqlQueryStress.DbProviders.MSSQL;
 using SqlQueryStressEngine;
-using SqlQueryStressEngineGUI;
 using System;
 
 namespace SqlQueryStressGUI

@@ -1,5 +1,4 @@
-﻿using SqlQueryStressEngineGUI;
-using System;
+﻿using System;
 
 namespace SqlQueryStressGUI
 {

@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SqlQueryStressGUI.Parameters;
+using SqlQueryStressGUI.Parameters.Views;
 using SqlQueryStressGUI.ViewModels;
 using SqlQueryStressGUI.Views;
-using SqlQueryStressGUI.Views.ParameterSettings;
 using System;
 using System.Windows;
 
@@ -27,6 +28,8 @@ namespace SqlQueryStressGUI
             ServiceProvider = serviceCollection.BuildServiceProvider();
             DiContainer.Initialize(ServiceProvider);
 
+            
+
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
@@ -35,16 +38,19 @@ namespace SqlQueryStressGUI
         {
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
 
+            var viewFactory = new ViewFactory();
+            services.AddSingleton<IViewFactory>(viewFactory);
+            ConfigureViews(viewFactory, services);
+
             services.AddTransient<MainWindow>();
             services.AddTransient<QueryStressTestPage>();
             services.AddTransient<ConnectionManager>();
             services.AddTransient<ConnectionWindowFactory>();
-            services.AddTransient<ParameterWindowBuilder>();
 
-            services.AddTransient<QueryParameterViewModel>();
-            services.AddTransient<QueryParameterSettingsFactory>();
-            services.AddTransient<QueryParameterSettingsViewFactory>();
-            services.AddTransient<ParameterSettingsWindow>();
+            services.AddTransient<ParameterViewModel>();
+            services.AddTransient<ParameterSettingsFactory>();
+            
+            services.AddTransient<ParameterViewModelBuilder>();
 
             services.AddTransient<QueryStressTestViewModel>();
             services.AddTransient<ConnectionManagerViewModel>();
@@ -52,7 +58,21 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<DbProviderFactory>();
             services.AddTransient<DbCommandProvider>();
-            services.AddTransient<QueryParameterViewModelBuilder>();
+        }
+
+        private void ConfigureViews(IViewFactory viewFactory, IServiceCollection services)
+        {
+            services.AddTransient<ParameterManager>();
+            viewFactory.Register<ParameterManagerViewModel, ParameterManager>();
+
+            services.AddTransient<ParameterSettingsWindow>();
+            viewFactory.Register<ParameterViewModel, ParameterSettingsWindow>();
+
+            services.AddTransient<RandomNumberView>();
+            viewFactory.Register<RandomNumberParameterSettings, RandomNumberView>();
+
+            services.AddTransient<RandomDateRangeView>();
+            viewFactory.Register<RandomDateRangeParameterSettings, RandomDateRangeView>();
         }
     }
 }

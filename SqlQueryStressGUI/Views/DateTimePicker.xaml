@@ -12,7 +12,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <DatePicker Grid.Column="0" SelectedDate="{Binding Path=Date, ElementName=datePicker}" VerticalAlignment="Center" />
-        <TextBox Grid.Column="1" Text="{Binding Path=Time, ElementName=datePicker}" VerticalAlignment="Center" Height="24" VerticalContentAlignment="Center" />
+        <DatePicker Grid.Column="0" SelectedDate="{Binding Path=Date, ElementName=datePicker, Mode=TwoWay}" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Text="{Binding Path=Time, ElementName=datePicker, Mode=TwoWay}" VerticalAlignment="Center" Height="24" VerticalContentAlignment="Center" />
     </Grid>
 </UserControl>

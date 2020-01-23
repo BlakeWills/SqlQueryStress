@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,7 +9,7 @@ namespace SqlQueryStressGUI.Views
     /// <summary>
     /// Interaction logic for DateTimePicker.xaml
     /// </summary>
-    public partial class DateTimePicker : UserControl
+    public partial class DateTimePicker : UserControl, INotifyPropertyChanged
     {
         public DateTimePicker()
         {
@@ -16,8 +18,14 @@ namespace SqlQueryStressGUI.Views
 
         static DateTimePicker()
         {
-            SelectedDateTimeProperty = DependencyProperty.Register("SelectedDateTime", typeof(DateTime), typeof(DateTimePicker));
+            SelectedDateTimeProperty = DependencyProperty.Register(
+                "SelectedDateTime",
+                typeof(DateTime),
+                typeof(DateTimePicker),
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(UpdateDateTime)));
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public static readonly DependencyProperty SelectedDateTimeProperty;
 
@@ -33,28 +41,31 @@ namespace SqlQueryStressGUI.Views
             }
         }
 
-        private DateTime _date;
         public DateTime Date
         {
-            get => _date;
+            get => SelectedDateTime.Date;
             set
             {
-                _date = value;
-                SetSelectedDateTime();
+                var time = SelectedDateTime.TimeOfDay;
+                SelectedDateTime = value.Add(time);
             }
         }
 
-        private TimeSpan _time;
         public TimeSpan Time
         {
-            get => _time;
+            get => SelectedDateTime.TimeOfDay;
             set
             {
-                _time = value;
-                SetSelectedDateTime();
+                var date = SelectedDateTime.Date;
+                SelectedDateTime = date.Add(value);
             }
         }
 
-        private void SetSelectedDateTime() => SelectedDateTime = Date.Add(Time);
+        private static void UpdateDateTime(DependencyObject d, DependencyPropertyChangedEventArgs eventArgs)
+        {
+            var datePicker = (DateTimePicker)d;
+            datePicker.PropertyChanged?.Invoke(d, new PropertyChangedEventArgs(nameof(Date)));
+            datePicker.PropertyChanged?.Invoke(d, new PropertyChangedEventArgs(nameof(Time)));
+        }
     }
 }

@@ -1,6 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
-using SqlQueryStressGUI.ViewModels;
+using SqlQueryStressGUI.Parameters;
 using System.Collections.Generic;
 
 namespace SqlQueryStressGUI.Tests.Unit
@@ -24,22 +24,22 @@ namespace SqlQueryStressGUI.Tests.Unit
 				[Date] DESC,
 				TotalSales DESC";
 
-        private List<QueryParameterViewModel> _expectedViewModels;
-        private List<QueryParameterViewModel> _viewModels;
-        private QueryParameterViewModelBuilder _builder;
+        private List<ParameterViewModel> _expectedViewModels;
+        private List<ParameterViewModel> _viewModels;
+        private ParameterViewModelBuilder _builder;
 
         [SetUp]
         public void Setup()
         {
-            _builder = new QueryParameterViewModelBuilder(null, null);
+            _builder = new ParameterViewModelBuilder(null);
 
-            _expectedViewModels = new List<QueryParameterViewModel>
+            _expectedViewModels = new List<ParameterViewModel>
             {
-                new QueryParameterViewModel(null, null) { Name = "@Start" },
-                new QueryParameterViewModel(null, null) { Name = "@End" },
+                new ParameterViewModel(null) { Name = "@Start" },
+                new ParameterViewModel(null) { Name = "@End" },
             };
 
-            _viewModels = new List<QueryParameterViewModel>();
+            _viewModels = new List<ParameterViewModel>();
         }
 
         [Test]
@@ -53,10 +53,10 @@ namespace SqlQueryStressGUI.Tests.Unit
         [Test]
         public void GivenQueryWithParams_MatchingExistingViewModels_MakesNoChanges()
         {
-            var startParam = new QueryParameterViewModel(null, null) { Name = "@Start" };
-            var endParam = new QueryParameterViewModel(null, null) { Name = "@End" };
+            var startParam = new ParameterViewModel(null) { Name = "@Start" };
+            var endParam = new ParameterViewModel(null) { Name = "@End" };
 
-            _viewModels = new List<QueryParameterViewModel> { startParam, endParam };
+            _viewModels = new List<ParameterViewModel> { startParam, endParam };
 
             _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
 
@@ -69,8 +69,8 @@ namespace SqlQueryStressGUI.Tests.Unit
         [Test]
         public void GivenUpdatedQueryWithParams_BuildsMissingViewModels()
         {
-            var startParam = new QueryParameterViewModel(null, null) { Name = "@Start" };
-            _viewModels = new List<QueryParameterViewModel> { startParam };
+            var startParam = new ParameterViewModel(null) { Name = "@Start" };
+            _viewModels = new List<ParameterViewModel> { startParam };
 
             _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
 
@@ -83,8 +83,8 @@ namespace SqlQueryStressGUI.Tests.Unit
         {
             _query = "SELECT * FROM MyTable";
 
-            var startParam = new QueryParameterViewModel(null, null) { Name = "@Start" };
-            _viewModels = new List<QueryParameterViewModel> { startParam };
+            var startParam = new ParameterViewModel(null) { Name = "@Start" };
+            _viewModels = new List<ParameterViewModel> { startParam };
 
             _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
 
