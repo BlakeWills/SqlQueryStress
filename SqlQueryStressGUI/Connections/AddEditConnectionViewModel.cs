@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SqlQueryStressGUI.ViewModels
+namespace SqlQueryStressGUI.Connections
 {
     public class AddEditConnectionViewModel : ViewModel
     {

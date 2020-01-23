@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SqlQueryStressEngine;
 using SqlQueryStressEngine.Parameters;
+using SqlQueryStressGUI.Connections;
+using SqlQueryStressGUI.Connections.Views;
 using SqlQueryStressGUI.Parameters;
 using SqlQueryStressGUI.Views;
 using System;
@@ -206,8 +208,7 @@ namespace SqlQueryStressGUI.ViewModels
             {
                 SelectedConnection = Connections.First();
 
-                var conManager = DiContainer.Instance.ServiceProvider.GetRequiredService<ConnectionManager>();
-                conManager.ShowDialog();
+                _viewFactory.ShowDialog<ConnectionManagerViewModel>();
             }
         }
 

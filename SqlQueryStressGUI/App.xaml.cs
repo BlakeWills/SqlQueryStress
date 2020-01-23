@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SqlQueryStressGUI.Connections;
+using SqlQueryStressGUI.Connections.Views;
 using SqlQueryStressGUI.Parameters;
 using SqlQueryStressGUI.Parameters.Views;
 using SqlQueryStressGUI.ViewModels;
@@ -28,8 +30,6 @@ namespace SqlQueryStressGUI
             ServiceProvider = serviceCollection.BuildServiceProvider();
             DiContainer.Initialize(ServiceProvider);
 
-            
-
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
@@ -44,8 +44,6 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<MainWindow>();
             services.AddTransient<QueryStressTestPage>();
-            services.AddTransient<ConnectionManager>();
-            services.AddTransient<ConnectionWindowFactory>();
 
             services.AddTransient<ParameterViewModel>();
             services.AddTransient<ParameterSettingsFactory>();
@@ -73,6 +71,12 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<RandomDateRangeView>();
             viewFactory.Register<RandomDateRangeParameterSettings, RandomDateRangeView>();
+
+            services.AddTransient<ConnectionWindow>();
+            viewFactory.Register<AddEditConnectionViewModel, ConnectionWindow>();
+
+            services.AddTransient<ConnectionManager>();
+            viewFactory.Register<ConnectionManagerViewModel, ConnectionManager>();
         }
     }
 }

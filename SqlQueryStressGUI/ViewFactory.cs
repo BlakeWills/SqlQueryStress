@@ -19,6 +19,12 @@ namespace SqlQueryStressGUI
 
         public void ShowDialog<TViewModel>(TViewModel viewModel) => GetWindow(viewModel).ShowDialog();
 
+        public void ShowDialog<TViewModel>()
+        {
+            var viewModel = DiContainer.Instance.ServiceProvider.GetRequiredService<TViewModel>();
+            GetWindow(viewModel).ShowDialog();
+        }
+
         private Window GetWindow<TViewModel>(TViewModel viewModel) => (Window)GetFrameworkElement(viewModel);
 
         public UserControl GetUserControl<TViewModel>(TViewModel viewModel) => (UserControl)GetFrameworkElement(viewModel);

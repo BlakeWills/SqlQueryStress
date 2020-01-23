@@ -1,17 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SqlQueryStressGUI.ViewModels
+namespace SqlQueryStressGUI.Connections
 {
     public class ConnectionManagerViewModel : ViewModel
     {
         private readonly IConnectionProvider _connectionProvider;
+        private readonly IViewFactory _viewFactory;
 
-        public ConnectionManagerViewModel(IConnectionProvider connectionProvider)
+        public ConnectionManagerViewModel(
+            IConnectionProvider connectionProvider,
+            IViewFactory viewFactory)
         {
             _connectionProvider = connectionProvider;
+            _viewFactory = viewFactory;
             _connectionProvider.ConnectionsChanged += ConnectionProvider_ConnectionsChanged;
 
             var connectionVms = _connectionProvider.GetConnections().Select(x => BuildConnectionViewModel(x));
@@ -42,13 +45,12 @@ namespace SqlQueryStressGUI.ViewModels
 
         private void ShowConnectionWindow(AddEditConnectionViewModel connectionViewModel = null)
         {
-            var addEditWindow = DiContainer
-                .Instance
-                .ServiceProvider
-                .GetRequiredService<ConnectionWindowFactory>()
-                .Build(connectionViewModel);
+            if (connectionViewModel == null)
+            {
+                connectionViewModel = DiContainer.Instance.ServiceProvider.GetRequiredService<AddEditConnectionViewModel>();
+            }
 
-            addEditWindow.ShowDialog();
+            _viewFactory.ShowDialog(connectionViewModel);
         }
 
         private void ConnectionProvider_ConnectionsChanged(object sender, ConnectionsChangedEventArgs e)

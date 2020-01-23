@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SqlQueryStressGUI
+namespace SqlQueryStressGUI.Connections
 {
     public class ConnectionProvider : IConnectionProvider
     {
