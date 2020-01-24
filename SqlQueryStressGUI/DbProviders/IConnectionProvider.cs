@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 
-namespace SqlQueryStressGUI.Connections
+namespace SqlQueryStressGUI.DbProviders
 {
     public interface IConnectionProvider
     {

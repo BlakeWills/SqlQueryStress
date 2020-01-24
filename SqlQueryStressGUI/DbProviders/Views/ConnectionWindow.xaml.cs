@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SqlQueryStressGUI.Connections.Views
+namespace SqlQueryStressGUI.DbProviders.Views
 {
     /// <summary>
     /// Interaction logic for ConnectionWindow.xaml

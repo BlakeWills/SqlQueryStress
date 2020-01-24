@@ -29,6 +29,12 @@ namespace SqlQueryStressGUI
 
         public UserControl GetUserControl<TViewModel>(TViewModel viewModel) => (UserControl)GetFrameworkElement(viewModel);
 
+        public Page GetPage<TViewModel>()
+        {
+            var viewModel = DiContainer.Instance.ServiceProvider.GetRequiredService<TViewModel>();
+            return (Page)GetFrameworkElement(viewModel);
+        }
+
         public UserControl GetUserControl(Type viewModelType, object viewModel) => (UserControl)GetFrameworkElement(viewModelType, viewModel);
 
         public void Register<TViewModel, TView>() where TView : FrameworkElement

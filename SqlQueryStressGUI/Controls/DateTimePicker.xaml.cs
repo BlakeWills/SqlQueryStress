@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SqlQueryStressGUI.Views
+namespace SqlQueryStressGUI.Controls
 {
     /// <summary>
     /// Interaction logic for DateTimePicker.xaml

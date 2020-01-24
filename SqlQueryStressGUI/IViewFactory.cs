@@ -14,6 +14,8 @@ namespace SqlQueryStressGUI
 
         void ShowDialog<TViewModel>();
 
+        Page GetPage<TViewModel>();
+
         UserControl GetUserControl<TViewModel>(TViewModel viewModel);
 
         UserControl GetUserControl(Type viewModelType, object viewModel);

@@ -1,4 +1,4 @@
-﻿using SqlQueryStressGUI.Connections;
+﻿using SqlQueryStressGUI.DbProviders;
 using System;
 using System.Collections.Generic;
 

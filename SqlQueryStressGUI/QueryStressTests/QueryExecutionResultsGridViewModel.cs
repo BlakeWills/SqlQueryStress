@@ -1,7 +1,7 @@
 ﻿using SqlQueryStressEngine;
 using System.Collections.ObjectModel;
 
-namespace SqlQueryStressGUI.ViewModels
+namespace SqlQueryStressGUI.QueryStressTests
 {
     public class QueryExecutionResultsGridViewModel : ViewModel
     {

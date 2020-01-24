@@ -2,7 +2,7 @@
 using SqlQueryStressEngine;
 using System;
 
-namespace SqlQueryStressGUI
+namespace SqlQueryStressGUI.DbProviders
 {
     public sealed class DbProviderFactory
     {

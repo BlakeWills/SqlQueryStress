@@ -1,4 +1,4 @@
-﻿namespace SqlQueryStressGUI
+﻿namespace SqlQueryStressGUI.DbProviders
 {
     public enum DbProvider
     {

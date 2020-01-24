@@ -1,7 +1,7 @@
-﻿using SqlQueryStressGUI.Connections;
+﻿using SqlQueryStressGUI.DbProviders;
 using System;
 
-namespace SqlQueryStressGUI
+namespace SqlQueryStressGUI.DbProviders
 {
     public class DbCommand
     {

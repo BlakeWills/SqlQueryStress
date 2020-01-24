@@ -1,4 +1,4 @@
-﻿using SqlQueryStressGUI.Views;
+﻿using SqlQueryStressGUI.QueryStressTests;
 using System.Windows;
 
 namespace SqlQueryStressGUI
@@ -8,10 +8,10 @@ namespace SqlQueryStressGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(QueryStressTestPage queryStressTestPage)
+        public MainWindow(IViewFactory viewFactory)
         {
             InitializeComponent();
-            Content = queryStressTestPage;
+            Content = viewFactory.GetPage<QueryStressTestViewModel>();
         }
     }
 }

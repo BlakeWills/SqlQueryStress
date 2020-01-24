@@ -2,7 +2,7 @@
 using System.Data;
 using System.Reflection;
 
-namespace SqlQueryStressGUI
+namespace SqlQueryStressGUI.QueryStressTests
 {
     public class QueryExecutionStatisticsTable : DataTable
     {

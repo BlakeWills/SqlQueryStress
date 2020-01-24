@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SqlQueryStressEngine;
+﻿using SqlQueryStressEngine;
 using SqlQueryStressEngine.Parameters;
-using SqlQueryStressGUI.Connections;
-using SqlQueryStressGUI.Connections.Views;
+using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.Parameters;
-using SqlQueryStressGUI.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace SqlQueryStressGUI.ViewModels
+namespace SqlQueryStressGUI.QueryStressTests
 {
     public sealed class QueryStressTestViewModel : ViewModel
     {

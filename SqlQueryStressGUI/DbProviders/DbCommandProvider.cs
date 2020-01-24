@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SqlQueryStressGUI
+namespace SqlQueryStressGUI.DbProviders
 {
     public sealed class DbCommandProvider
     {

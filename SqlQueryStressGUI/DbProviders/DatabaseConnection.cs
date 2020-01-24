@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SqlQueryStressGUI.Connections
+namespace SqlQueryStressGUI.DbProviders
 {
     public class DatabaseConnection
     {

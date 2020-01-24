@@ -1,6 +1,6 @@
-﻿using SqlQueryStressGUI.Connections;
+﻿using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.Parameters;
-using SqlQueryStressGUI.ViewModels;
+using SqlQueryStressGUI.QueryStressTests;
 using System;
 
 namespace SqlQueryStressGUI.DesignTimeContexts

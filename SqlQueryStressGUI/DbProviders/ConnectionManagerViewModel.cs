@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SqlQueryStressGUI.Connections
+namespace SqlQueryStressGUI.DbProviders
 {
     public class ConnectionManagerViewModel : ViewModel
     {

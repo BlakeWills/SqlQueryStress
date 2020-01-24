@@ -1,16 +1,14 @@
-﻿using SqlQueryStressGUI.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-namespace SqlQueryStressGUI.Views
+namespace SqlQueryStressGUI.QueryStressTests.Views
 {
     /// <summary>
     /// Interaction logic for QueryStressTestPage.xaml
     /// </summary>
     public partial class QueryStressTestPage : Page
     {
-        public QueryStressTestPage(QueryStressTestViewModel queryStressTestViewModel)
+        public QueryStressTestPage()
         {
-            DataContext = queryStressTestViewModel;
             InitializeComponent();
         }
 

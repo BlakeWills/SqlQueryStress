@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace SqlQueryStressGUI.Views
+namespace SqlQueryStressGUI.QueryStressTests.Views
 {
     /// <summary>
     /// Interaction logic for QueryExecutionResultsPanel.xaml
