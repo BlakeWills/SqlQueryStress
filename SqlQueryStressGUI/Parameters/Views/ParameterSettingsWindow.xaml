@@ -24,7 +24,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ParameterTypes}" SelectedItem="{Binding Type, Mode=TwoWay}" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Linked Parameter" Margin="0,10,0,0"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ParameterTypes}" SelectedItem="{Binding Type, Mode=TwoWay}" Margin="0,10,0,0" />
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding QueryParameters}" DisplayMemberPath="Name" SelectedValue="{Binding LinkedParameter}" Margin="0,10,0,0" />
 
         <views:ParameterSettingsPanel ParameterSettings="{Binding Settings, Mode=TwoWay}" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,10"/>
 

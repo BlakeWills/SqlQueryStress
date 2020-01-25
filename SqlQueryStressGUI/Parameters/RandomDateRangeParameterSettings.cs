@@ -5,7 +5,12 @@ namespace SqlQueryStressGUI.Parameters
 {
     public class RandomDateRangeParameterSettings : ParameterSettingsViewModel
     {
-        public RandomDateRangeParameterSettings(string name) : base(name) { }
+        private IParameterValueBuilder _parameterValueBuilder;
+
+        public RandomDateRangeParameterSettings(string name)
+        {
+            Name = name;
+        }
         
         private DateTime _minValue;
         public DateTime MinValue
@@ -28,12 +33,15 @@ namespace SqlQueryStressGUI.Parameters
             set => SetProperty(value, ref _maxInterval);
         }
 
-        public RandomDateRangeParameterSettings LinkedParameter { get; set; } = null;
-
         public override IParameterValueBuilder GetParameterValueBuilder()
         {
-            var linkedParamBuilder = (RandomDateRangeParameterBuilder)LinkedParameter?.GetParameterValueBuilder();
-            return new RandomDateRangeParameterBuilder(MinValue, MaxValue, MaxInterval, Name, linkedParamBuilder);
+            if (_parameterValueBuilder == null)
+            {
+                var linkedParamBuilder = (RandomDateRangeParameterBuilder)LinkedParameter?.GetParameterValueBuilder();
+                _parameterValueBuilder = new RandomDateRangeParameterBuilder(MinValue, MaxValue, MaxInterval, Name, linkedParamBuilder);
+            }
+
+            return _parameterValueBuilder;
         }
     }
 }

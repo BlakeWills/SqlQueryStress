@@ -4,13 +4,10 @@ namespace SqlQueryStressGUI.Parameters
 {
     public abstract class ParameterSettingsViewModel : ViewModel
     {
-        public ParameterSettingsViewModel(string name)
-        {
-            Name = name;
-        }
-
-        public string Name { get; }
+        public string Name { get; protected set; }
 
         public abstract IParameterValueBuilder GetParameterValueBuilder();
+
+        public ParameterSettingsViewModel LinkedParameter { get; set; }
     }
 }

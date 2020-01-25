@@ -4,7 +4,10 @@ namespace SqlQueryStressGUI.Parameters
 {
     public class RandomNumberParameterSettings : ParameterSettingsViewModel
     {
-        public RandomNumberParameterSettings(string name) : base(name) { }
+        public RandomNumberParameterSettings(string name)
+        {
+            Name = name;
+        }
 
         public int MinValue { get; set; }
 

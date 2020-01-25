@@ -52,7 +52,7 @@ namespace SqlQueryStressEngine.Parameters
         private DateTime GetEndDate()
         {
             var startDate = (DateTime)_startDateBuilder._lastValue.Value;
-            var interval = (int)Math.Floor(_maxInterval.TotalSeconds);
+            var interval = (int)Math.Floor(_startDateBuilder._maxInterval.TotalSeconds);
             return startDate.Add(TimeSpan.FromSeconds(RandomWrapper.Random.Next(interval)));
         }
 
