@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.QueryStressTests;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,14 +12,18 @@ namespace SqlQueryStressGUI.TestEnvironment
     {
         private const string _connectionManagerText = "Connection Manager...";
         private readonly IConnectionProvider _connectionProvider;
+        private readonly DbCommandProvider _dbCommandProvider;
         private readonly IViewFactory _viewFactory;
 
         public TestEnvironmentViewModel(
             IViewFactory viewFactory,
-            IConnectionProvider connectionProvider)
+            IConnectionProvider connectionProvider,
+            DbCommandProvider dbCommandProvider)
         {
             _viewFactory = viewFactory;
             _connectionProvider = connectionProvider;
+            _dbCommandProvider = dbCommandProvider;
+
             _connectionProvider.ConnectionsChanged += (sender, args) =>
             {
                 Connections = BuildConnectionList(args.Connections);
@@ -28,17 +33,16 @@ namespace SqlQueryStressGUI.TestEnvironment
             Connections = BuildConnectionList(_connectionProvider.GetConnections());
             Tests = new ObservableCollection<QueryStressTestViewModel>();
             
-            //OnConnectionChanged();
-
             AddNewQueryStressTest();
+            OnConnectionChanged();
 
             ExecuteCommandHandler = new CommandHandler((_) => {
                 ActiveTest.StartQueryStressTest();
                 }, canExecute: (_) => IsConnectionValid());
 
             NewQueryStressTestCommandHandler = new CommandHandler((_) => AddNewQueryStressTest());
-
             ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
+            ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
         }
 
         public CommandHandler ExecuteCommandHandler { get; }
@@ -46,6 +50,8 @@ namespace SqlQueryStressGUI.TestEnvironment
         public CommandHandler NewQueryStressTestCommandHandler { get; }
 
         public CommandHandler ConnectionDropdownClosedCommand { get; }
+
+        public CommandHandler ConnectionChangedCommand { get; }
 
         private QueryStressTestViewModel _activeTest;
         public QueryStressTestViewModel ActiveTest
@@ -66,6 +72,13 @@ namespace SqlQueryStressGUI.TestEnvironment
         {
             get => _connections;
             set => SetProperty(value, ref _connections);
+        }
+
+        private IEnumerable<DbCommand> _dbCommands;
+        public IEnumerable<DbCommand> DbCommands
+        {
+            get => _dbCommands;
+            set => SetProperty(value, ref _dbCommands);
         }
 
         private ObservableCollection<DatabaseConnection> BuildConnectionList(IEnumerable<DatabaseConnection> connections)
@@ -97,6 +110,18 @@ namespace SqlQueryStressGUI.TestEnvironment
                 ActiveTest.SelectedConnection = Connections.First();
 
                 _viewFactory.ShowDialog<ConnectionManagerViewModel>();
+            }
+        }
+
+        private void OnConnectionChanged()
+        {
+            if (IsConnectionValid())
+            {
+                DbCommands = _dbCommandProvider.GetDbCommands(ActiveTest.SelectedConnection.DbProvider);
+            }
+            else
+            {
+                DbCommands = Array.Empty<DbCommand>();
             }
         }
     }
