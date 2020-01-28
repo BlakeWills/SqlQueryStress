@@ -43,6 +43,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             NewQueryStressTestCommandHandler = new CommandHandler((_) => AddNewQueryStressTest());
             ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
+            DbCommandSelected = new CommandHandler((dbCommand) => InvokeDbCommand((DbCommand)dbCommand));
         }
 
         public CommandHandler ExecuteCommandHandler { get; }
@@ -52,6 +53,8 @@ namespace SqlQueryStressGUI.TestEnvironment
         public CommandHandler ConnectionDropdownClosedCommand { get; }
 
         public CommandHandler ConnectionChangedCommand { get; }
+
+        public CommandHandler DbCommandSelected { get; }
 
         private QueryStressTestViewModel _activeTest;
         public QueryStressTestViewModel ActiveTest
@@ -123,6 +126,11 @@ namespace SqlQueryStressGUI.TestEnvironment
             {
                 DbCommands = Array.Empty<DbCommand>();
             }
+        }
+
+        private void InvokeDbCommand(DbCommand command)
+        {
+            command.Command(ActiveTest.SelectedConnection);
         }
     }
 }
