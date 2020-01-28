@@ -5,6 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:designContexts="clr-namespace:SqlQueryStressGUI.DesignTimeContexts"
       xmlns:views="clr-namespace:SqlQueryStressGUI.QueryStressTests.Views"
+      xmlns:teviews="clr-namespace:SqlQueryStressGUI.TestEnvironment.Views"
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       xmlns:ext="clr-namespace:System.Windows.Controls.Extensions"
       xmlns:sqs="clr-namespace:SqlQueryStressGUI"
@@ -103,7 +104,7 @@
             </ToolBar>
         </ToolBarTray>
 
-        <views:TabbedQueryEditor x:Name="queryEditor" Grid.Row="1" />
+        <teviews:TabbedQueryEditor x:Name="queryEditor" Grid.Row="1" />
 
         <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 

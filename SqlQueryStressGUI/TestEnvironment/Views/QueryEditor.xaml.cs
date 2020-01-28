@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SqlQueryStressGUI.QueryStressTests.Views
+namespace SqlQueryStressGUI.TestEnvironment.Views
 {
     /// <summary>
     /// Interaction logic for QueryEditor.xaml
@@ -31,7 +31,7 @@ namespace SqlQueryStressGUI.QueryStressTests.Views
             set => SetValue(QueryProperty, value);
         }
 
-        private void OnTextChanged(object sender, System.EventArgs e)
+        private void OnTextChanged(object sender, EventArgs e)
         {
             Query = sqlEditor.Document.Text;
             QueryChanged?.Invoke(this, EventArgs.Empty);

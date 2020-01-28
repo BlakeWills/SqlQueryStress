@@ -1,40 +1,44 @@
-﻿using SqlQueryStressEngine;
-using SqlQueryStressEngine.Parameters;
-using SqlQueryStressGUI.DbProviders;
+﻿using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Threading;
 
-namespace SqlQueryStressGUI.QueryStressTests
+namespace SqlQueryStressGUI.TestEnvironment
 {
-    public sealed class QueryStressTestViewModel : ViewModel
+    public class ToolbarViewModel : ViewModel
     {
         private const string _connectionManagerText = "Connection Manager...";
-        private readonly DbProviderFactory _dbProviderFactory;
+        private readonly IConnectionProvider _connectionProvider;
         private readonly DbCommandProvider _dbCommandProvider;
         private readonly ParameterViewModelBuilder _parameterViewModelBuilder;
         private readonly IViewFactory _viewFactory;
 
-        public QueryStressTestViewModel(
-            DbProviderFactory dbProviderFactory,
+        public ToolbarViewModel(
+            IConnectionProvider connectionProvider,
             DbCommandProvider dbCommandProvider,
             ParameterViewModelBuilder parameterViewModelBuilder,
             IViewFactory viewFactory)
         {
-            _dbProviderFactory = dbProviderFactory;
+            _connectionProvider = connectionProvider;
             _dbCommandProvider = dbCommandProvider;
             _parameterViewModelBuilder = parameterViewModelBuilder;
             _viewFactory = viewFactory;
 
+            _connectionProvider.ConnectionsChanged += (sender, args) =>
+            {
+                Connections = BuildConnectionList(args.Connections);
+                SelectedConnection = Connections.First();
+            };
+
+            Connections = BuildConnectionList(_connectionProvider.GetConnections());
+            SelectedConnection = Connections.First();
             OnConnectionChanged();
 
             QueryParameters = new List<ParameterViewModel>();
 
-            GoCommandHandler = new CommandHandler((_) => StartQueryStressTest(), canExecute: (_) => IsConnectionValid());
+            GoCommandHandler = new CommandHandler((_) => RaiseOnExecute(), canExecute: (_) => IsConnectionValid());
             ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
             DbCommandSelected = new CommandHandler((dbCommand) => InvokeDbCommand((DbCommand)dbCommand));
@@ -50,6 +54,8 @@ namespace SqlQueryStressGUI.QueryStressTests
         public CommandHandler DbCommandSelected { get; }
 
         public CommandHandler ParameterSettingsCommand { get; set; }
+
+        public event EventHandler OnExecute;
 
         private ObservableCollection<DatabaseConnection> _connections;
         public ObservableCollection<DatabaseConnection> Connections
@@ -67,13 +73,6 @@ namespace SqlQueryStressGUI.QueryStressTests
                 SetProperty(value, ref _selectedConnection);
                 RaiseCanExecuteChanged();
             }
-        }
-
-        private string _query;
-        public string Query
-        {
-            get => _query;
-            set => SetProperty(value, ref _query);
         }
 
         private int _threadCount;
@@ -104,100 +103,14 @@ namespace SqlQueryStressGUI.QueryStressTests
             set => SetProperty(value, ref _queryParameters);
         }
 
-        private QueryExecutionStatisticsTable _queryExecutionStatisticsTable;
-        public QueryExecutionStatisticsTable QueryExecutionStatisticsTable
+        private void RaiseOnExecute()
         {
-            get => _queryExecutionStatisticsTable;
-            set => SetProperty(value, ref _queryExecutionStatisticsTable);
-        }
-
-        private TimeSpan _elapsed;
-        public TimeSpan Elapsed
-        {
-            get => _elapsed;
-            set => SetProperty(value, ref _elapsed);
-        }
-
-        private TimeSpan _avgExecutionTime;
-        public TimeSpan AverageExecutionTime
-        {
-            get => _avgExecutionTime;
-            set => SetProperty(value, ref _avgExecutionTime);
-        }
-
-        public List<QueryExecutionStatistics> Results { get; private set; }
-
-        public void StartQueryStressTest()
-        {
-            Results = new List<QueryExecutionStatistics>();
-            QueryExecutionStatisticsTable?.Clear();
-
-            var timer = new DispatcherTimer()
-            {
-                Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 25)
-            };
-
-            var test = BuildQueryStressTest();
-
-            test.StressTestComplete += (sender, args) =>
-            {
-                timer.Stop();
-                Elapsed = test.Elapsed;
-            };
-
-            timer.Tick += (sender, args) =>
-            {
-                Elapsed = test.Elapsed;
-            };
-
-            timer.Start();
-
-            test.BeginInvoke();
-        }
-
-        private QueryStressTest BuildQueryStressTest() => new QueryStressTest
-        {
-            DbProvider = _dbProviderFactory.GetDbProvider(SelectedConnection.DbProvider),
-            ThreadCount = ThreadCount,
-            Iterations = Iterations,
-            Query = Query,
-            ConnectionString = SelectedConnection.ConnectionString,
-            QueryParameters = GetParameterSets(),
-            OnQueryExecutionComplete = (result) =>
-            {
-                Application.Current.Dispatcher.BeginInvoke(() => AddQueryExecutionResult(result));
-            }
-        };
-
-        private IEnumerable<ParameterSet> GetParameterSets()
-        {
-            var paramProvider = new ParameterProvider();
-            var executions = ThreadCount * Iterations;
-            var paramValueBuilders = QueryParameters.Select(x => x.Settings.GetParameterValueBuilder());
-
-            return paramProvider.GetParameterSets(paramValueBuilders, executions);
-        }
-
-        private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
-        {
-            Results.Add(executionStatistics);
-
-            AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));
-
-            // This is thread safe as we only ever call it from the UI thread.
-            if (QueryExecutionStatisticsTable == null)
-            {
-                QueryExecutionStatisticsTable = QueryExecutionStatisticsTable.CreateFromExecutionResult(executionStatistics);
-            }
-            else
-            {
-                QueryExecutionStatisticsTable.AddRow(executionStatistics);
-            }
+            OnExecute?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnConnectionDropdownClosed()
         {
-            if(SelectedConnection.Name == _connectionManagerText)
+            if (SelectedConnection.Name == _connectionManagerText)
             {
                 SelectedConnection = Connections.First();
 

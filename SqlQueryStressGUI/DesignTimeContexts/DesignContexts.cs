@@ -1,6 +1,7 @@
 ﻿using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.Parameters;
 using SqlQueryStressGUI.QueryStressTests;
+using SqlQueryStressGUI.TestEnvironment;
 using System;
 
 namespace SqlQueryStressGUI.DesignTimeContexts
@@ -16,7 +17,7 @@ namespace SqlQueryStressGUI.DesignTimeContexts
         private static ParameterViewModelBuilder _queryParameterViewModelBuilder => new ParameterViewModelBuilder(null);
 
         public static QueryStressTestViewModel QueryStressTestContext =>
-            new QueryStressTestViewModel(_connectionProvider, _dbProviderFactory, _dbCommandProvider, _queryParameterViewModelBuilder, viewFactory: null);
+            new QueryStressTestViewModel(_dbProviderFactory, _dbCommandProvider, _queryParameterViewModelBuilder, viewFactory: null);
 
         public static ConnectionManagerViewModel ConnectionManagerContext =>
             new ConnectionManagerViewModel(_connectionProvider, null);

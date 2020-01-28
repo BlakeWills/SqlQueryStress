@@ -6,6 +6,8 @@ using SqlQueryStressGUI.Parameters;
 using SqlQueryStressGUI.Parameters.Views;
 using SqlQueryStressGUI.QueryStressTests;
 using SqlQueryStressGUI.QueryStressTests.Views;
+using SqlQueryStressGUI.TestEnvironment;
+using SqlQueryStressGUI.TestEnvironment.Views;
 using System;
 using System.Windows;
 
@@ -58,6 +60,10 @@ namespace SqlQueryStressGUI
 
         private void ConfigureViews(IViewFactory viewFactory, IServiceCollection services)
         {
+            services.AddTransient<TestEnvironmentPage>();
+            services.AddTransient<TestEnvironmentViewModel>();
+            viewFactory.Register<TestEnvironmentViewModel, TestEnvironmentPage>();
+
             services.AddTransient<QueryStressTestPage>();
             viewFactory.Register<QueryStressTestViewModel, QueryStressTestPage>();
 

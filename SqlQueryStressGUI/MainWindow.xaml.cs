@@ -11,7 +11,7 @@ namespace SqlQueryStressGUI
         public MainWindow(IViewFactory viewFactory)
         {
             InitializeComponent();
-            Content = viewFactory.GetPage<QueryStressTestViewModel>();
+            Content = viewFactory.GetPage<TestEnvironment.TestEnvironmentViewModel>();
         }
     }
 }
