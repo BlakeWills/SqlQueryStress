@@ -26,9 +26,25 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         static Toolbar()
         {
             ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<DatabaseConnection>), typeof(Toolbar));
-            SelectedConnectionProperty = DependencyProperty.Register(nameof(SelectedConnection), typeof(DatabaseConnection), typeof(Toolbar));
-            IterationsProperty = DependencyProperty.Register(nameof(Iterations), typeof(int), typeof(Toolbar));
-            ThreadCountProperty = DependencyProperty.Register(nameof(ThreadCount), typeof(int), typeof(Toolbar));
+
+            SelectedConnectionProperty = DependencyProperty.Register(
+                nameof(SelectedConnection),
+                typeof(DatabaseConnection),
+                typeof(Toolbar),
+                new FrameworkPropertyMetadata(default(DatabaseConnection), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+            IterationsProperty = DependencyProperty.Register(
+                nameof(Iterations),
+                typeof(int),
+                typeof(Toolbar),
+                new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+            ThreadCountProperty = DependencyProperty.Register(
+                nameof(ThreadCount),
+                typeof(int),
+                typeof(Toolbar),
+                new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
             ExecuteCommandProperty = DependencyProperty.Register(nameof(ExecuteCommand), typeof(ICommand), typeof(Toolbar));
             NewQueryStressTestCommandProperty = DependencyProperty.Register(nameof(NewQueryStressTestCommand), typeof(ICommand), typeof(Toolbar));
         }
