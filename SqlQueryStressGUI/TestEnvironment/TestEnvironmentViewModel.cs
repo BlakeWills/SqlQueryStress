@@ -11,34 +11,41 @@ namespace SqlQueryStressGUI.TestEnvironment
     {
         private const string _connectionManagerText = "Connection Manager...";
         private readonly IConnectionProvider _connectionProvider;
+        private readonly IViewFactory _viewFactory;
 
-        public TestEnvironmentViewModel(IConnectionProvider connectionProvider)
+        public TestEnvironmentViewModel(
+            IViewFactory viewFactory,
+            IConnectionProvider connectionProvider)
         {
+            _viewFactory = viewFactory;
             _connectionProvider = connectionProvider;
-
             _connectionProvider.ConnectionsChanged += (sender, args) =>
             {
                 Connections = BuildConnectionList(args.Connections);
                 ActiveTest.SelectedConnection = Connections.First();
             };
 
-            Tests = new ObservableCollection<QueryStressTestViewModel>();
-            AddNewQueryStressTest();
-
             Connections = BuildConnectionList(_connectionProvider.GetConnections());
-            ActiveTest.SelectedConnection = Connections.First();
+            Tests = new ObservableCollection<QueryStressTestViewModel>();
+            
             //OnConnectionChanged();
+
+            AddNewQueryStressTest();
 
             ExecuteCommandHandler = new CommandHandler((_) => {
                 ActiveTest.StartQueryStressTest();
                 }, canExecute: (_) => IsConnectionValid());
 
             NewQueryStressTestCommandHandler = new CommandHandler((_) => AddNewQueryStressTest());
+
+            ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
         }
 
         public CommandHandler ExecuteCommandHandler { get; }
 
         public CommandHandler NewQueryStressTestCommandHandler { get; }
+
+        public CommandHandler ConnectionDropdownClosedCommand { get; }
 
         private QueryStressTestViewModel _activeTest;
         public QueryStressTestViewModel ActiveTest
@@ -78,8 +85,19 @@ namespace SqlQueryStressGUI.TestEnvironment
         private void AddNewQueryStressTest()
         {
             var newTest = DiContainer.Instance.ServiceProvider.GetRequiredService<QueryStressTestViewModel>();
+            newTest.SelectedConnection = Connections.First();
             Tests.Add(newTest);
             ActiveTest = newTest;
+        }
+
+        private void OnConnectionDropdownClosed()
+        {
+            if (ActiveTest.SelectedConnection.Name == _connectionManagerText)
+            {
+                ActiveTest.SelectedConnection = Connections.First();
+
+                _viewFactory.ShowDialog<ConnectionManagerViewModel>();
+            }
         }
     }
 }
