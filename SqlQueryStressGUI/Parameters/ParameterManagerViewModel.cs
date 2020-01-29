@@ -29,13 +29,9 @@ namespace SqlQueryStressGUI.Parameters
 
         private void OpenParameterSettings(ParameterViewModel queryParameter)
         {
-            var paramSettingsWindowViewModel = new ParameterSettingsWindowViewModel()
-            {
-                QueryParameters = QueryParameters.Select(x => x.Settings),
-                Parameter = queryParameter
-            };
+            var viewModel = ParameterSettingsWindowViewModel.Build(QueryParameters, queryParameter);
 
-            _viewFactory.ShowDialog(paramSettingsWindowViewModel);
+            _viewFactory.ShowDialog(viewModel);
         }
     }
 }

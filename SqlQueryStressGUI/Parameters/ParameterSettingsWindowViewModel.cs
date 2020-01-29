@@ -31,5 +31,16 @@ namespace SqlQueryStressGUI.Parameters
             var noLinkedParam = new NullParameterSettingsViewModel();
             return parameters.Where(x => x.Name != Parameter.Name).Concat(new[] { noLinkedParam });
         }
+
+        public static ParameterSettingsWindowViewModel Build(
+            IEnumerable<ParameterViewModel> parameterSettingsViewModels,
+            ParameterViewModel parameterViewModel)
+        {
+            return new ParameterSettingsWindowViewModel()
+            {
+                QueryParameters = parameterSettingsViewModels.Select(x => x.Settings),
+                Parameter = parameterViewModel
+            };
+        }
     }
 }
