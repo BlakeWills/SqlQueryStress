@@ -16,7 +16,7 @@ namespace SqlQueryStressGUI.DesignTimeContexts
         private static ParameterViewModelBuilder _queryParameterViewModelBuilder => new ParameterViewModelBuilder(null);
 
         public static QueryStressTestViewModel QueryStressTestContext =>
-            new QueryStressTestViewModel(_dbProviderFactory, _dbCommandProvider, _queryParameterViewModelBuilder, viewFactory: null);
+            new QueryStressTestViewModel(_dbProviderFactory);
 
         public static ConnectionManagerViewModel ConnectionManagerContext =>
             new ConnectionManagerViewModel(_connectionProvider, null);
