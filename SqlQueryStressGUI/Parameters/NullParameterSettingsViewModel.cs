@@ -1,5 +1,4 @@
 ﻿using SqlQueryStressEngine.Parameters;
-using System;
 
 namespace SqlQueryStressGUI.Parameters
 {
@@ -12,7 +11,7 @@ namespace SqlQueryStressGUI.Parameters
 
         public override IParameterValueBuilder GetParameterValueBuilder()
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
     }
 }

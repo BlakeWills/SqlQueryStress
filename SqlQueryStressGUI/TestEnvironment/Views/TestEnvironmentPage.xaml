@@ -21,7 +21,8 @@
             Iterations="{Binding Path=ActiveTest.Iterations}"
             ThreadCount="{Binding Path=ActiveTest.ThreadCount}"
             ExecuteCommand="{Binding Path=ExecuteCommandHandler}"
-            NewQueryStressTestCommand="{Binding Path=NewQueryStressTestCommandHandler}"/>
+            NewQueryStressTestCommand="{Binding Path=NewQueryStressTestCommandHandler}"
+            OpenParameterSettingsCommand="{Binding Path=OpenParameterSettingsCommand}"/>
 
         <views:TabbedQueryEditor
             x:Name="queryEditor"

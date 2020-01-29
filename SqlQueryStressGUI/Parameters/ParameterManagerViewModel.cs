@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SqlQueryStressGUI.Parameters
 {
@@ -26,6 +27,15 @@ namespace SqlQueryStressGUI.Parameters
 
         public CommandHandler SettingsCommand { get; }
 
-        private void OpenParameterSettings(ParameterViewModel queryParameter) => _viewFactory.ShowDialog(queryParameter);
+        private void OpenParameterSettings(ParameterViewModel queryParameter)
+        {
+            var paramSettingsWindowViewModel = new ParameterSettingsWindowViewModel()
+            {
+                QueryParameters = QueryParameters.Select(x => x.Settings),
+                Parameter = queryParameter
+            };
+
+            _viewFactory.ShowDialog(paramSettingsWindowViewModel);
+        }
     }
 }

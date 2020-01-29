@@ -45,7 +45,7 @@ namespace SqlQueryStressGUI
             services.AddTransient<MainWindow>();
 
             services.AddTransient<ParameterViewModel>();
-            services.AddTransient<QueryParameterContext>();
+            services.AddTransient<ParameterSettingsViewModelBuilder>();
             services.AddTransient<ParameterViewModelBuilder>();
 
             services.AddTransient<QueryStressTestViewModel>();
@@ -66,7 +66,7 @@ namespace SqlQueryStressGUI
             viewFactory.Register<ParameterManagerViewModel, ParameterManager>();
 
             services.AddTransient<ParameterSettingsWindow>();
-            viewFactory.Register<ParameterViewModel, ParameterSettingsWindow>();
+            viewFactory.Register<ParameterSettingsWindowViewModel, ParameterSettingsWindow>();
 
             services.AddTransient<RandomNumberView>();
             viewFactory.Register<RandomNumberParameterSettings, RandomNumberView>();

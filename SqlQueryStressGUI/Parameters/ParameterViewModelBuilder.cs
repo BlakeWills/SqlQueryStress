@@ -6,11 +6,11 @@ namespace SqlQueryStressGUI.Parameters
 {
     public class ParameterViewModelBuilder
     {
-        private readonly QueryParameterContext _queryParameterContext;
+        private readonly ParameterSettingsViewModelBuilder _parameterSettingsViewModelBuilder;
 
-        public ParameterViewModelBuilder(QueryParameterContext queryParameterContext)
+        public ParameterViewModelBuilder(ParameterSettingsViewModelBuilder parameterSettingsViewModelBuilder)
         {
-            _queryParameterContext = queryParameterContext;
+            _parameterSettingsViewModelBuilder = parameterSettingsViewModelBuilder;
         }
 
         private static readonly Regex _paramRegex = new Regex("@\\w*");
@@ -20,15 +20,13 @@ namespace SqlQueryStressGUI.Parameters
             var paramMatches = _paramRegex.Matches(query);
             var newViewModels = new List<ParameterViewModel>();
 
-            _queryParameterContext.ClearParameters();
-
             foreach(Match match in paramMatches)
             {
                 var existingViewModel = viewModels.FirstOrDefault(x => x.Name == match.Value);
 
                 if (existingViewModel == null)
                 {
-                    var paramViewModel = new ParameterViewModel(match.Value, _queryParameterContext);
+                    var paramViewModel = new ParameterViewModel(match.Value, _parameterSettingsViewModelBuilder);
 
                     newViewModels.Add(paramViewModel);
                 }

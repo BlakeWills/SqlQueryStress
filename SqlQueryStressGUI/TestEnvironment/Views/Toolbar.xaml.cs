@@ -17,6 +17,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         public static readonly DependencyProperty ThreadCountProperty;
         public static readonly DependencyProperty ExecuteCommandProperty;
         public static readonly DependencyProperty NewQueryStressTestCommandProperty;
+        public static readonly DependencyProperty OpenParameterSettingsCommandProperty;
 
         public Toolbar()
         {
@@ -47,6 +48,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
 
             ExecuteCommandProperty = DependencyProperty.Register(nameof(ExecuteCommand), typeof(ICommand), typeof(Toolbar));
             NewQueryStressTestCommandProperty = DependencyProperty.Register(nameof(NewQueryStressTestCommand), typeof(ICommand), typeof(Toolbar));
+            OpenParameterSettingsCommandProperty = DependencyProperty.Register(nameof(OpenParameterSettingsCommand), typeof(ICommand), typeof(Toolbar));
         }
 
         public ObservableCollection<DatabaseConnection> Connections
@@ -83,6 +85,12 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         {
             get => (ICommand)GetValue(NewQueryStressTestCommandProperty);
             set => SetValue(NewQueryStressTestCommandProperty, value);
+        }
+
+        public ICommand OpenParameterSettingsCommand
+        {
+            get => (ICommand)GetValue(OpenParameterSettingsCommandProperty);
+            set => SetValue(OpenParameterSettingsCommandProperty, value);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
