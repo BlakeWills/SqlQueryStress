@@ -60,7 +60,7 @@ namespace SqlQueryStressGUI
         {
             services.AddTransient<TestEnvironmentPage>();
             services.AddTransient<TestEnvironmentViewModel>();
-            viewFactory.Register<TestEnvironmentViewModel, TestEnvironmentPage>();
+            viewFactory.RegisterStartupPage<TestEnvironmentViewModel, TestEnvironmentPage>();
 
             services.AddTransient<ParameterManager>();
             viewFactory.Register<ParameterManagerViewModel, ParameterManager>();

@@ -6,7 +6,11 @@ namespace SqlQueryStressGUI
 {
     public interface IViewFactory
     {
+        void RegisterStartupPage<TViewModel, TView>() where TView : Page;
+
         void Register<TViewModel, TView>() where TView : FrameworkElement;
+
+        Page GetStartupPage();
 
         void Show<TViewModel>(TViewModel viewModel);
 
