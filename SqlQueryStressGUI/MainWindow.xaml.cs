@@ -1,5 +1,4 @@
-﻿using SqlQueryStressGUI.QueryStressTests;
-using System.Windows;
+﻿using System.Windows;
 
 namespace SqlQueryStressGUI
 {

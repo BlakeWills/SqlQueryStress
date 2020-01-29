@@ -1,6 +1,5 @@
 ﻿using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.Parameters;
-using SqlQueryStressGUI.QueryStressTests;
 using SqlQueryStressGUI.TestEnvironment;
 using System;
 

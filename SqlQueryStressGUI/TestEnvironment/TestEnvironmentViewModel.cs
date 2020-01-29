@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.Parameters;
-using SqlQueryStressGUI.QueryStressTests;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

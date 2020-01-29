@@ -25,4 +25,8 @@
     <ProjectReference Include="..\SqlQueryStressEngine\SqlQueryStressEngine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="QueryStressTests\" />
+  </ItemGroup>
+
 </Project>

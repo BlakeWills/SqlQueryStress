@@ -4,8 +4,6 @@ using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.DbProviders.Views;
 using SqlQueryStressGUI.Parameters;
 using SqlQueryStressGUI.Parameters.Views;
-using SqlQueryStressGUI.QueryStressTests;
-using SqlQueryStressGUI.QueryStressTests.Views;
 using SqlQueryStressGUI.TestEnvironment;
 using SqlQueryStressGUI.TestEnvironment.Views;
 using System;
@@ -63,9 +61,6 @@ namespace SqlQueryStressGUI
             services.AddTransient<TestEnvironmentPage>();
             services.AddTransient<TestEnvironmentViewModel>();
             viewFactory.Register<TestEnvironmentViewModel, TestEnvironmentPage>();
-
-            services.AddTransient<QueryStressTestPage>();
-            viewFactory.Register<QueryStressTestViewModel, QueryStressTestPage>();
 
             services.AddTransient<ParameterManager>();
             viewFactory.Register<ParameterManagerViewModel, ParameterManager>();

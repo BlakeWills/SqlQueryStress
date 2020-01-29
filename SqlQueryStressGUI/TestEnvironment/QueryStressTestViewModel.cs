@@ -8,9 +8,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
-using SqlQueryStressGUI.TestEnvironment;
 
-namespace SqlQueryStressGUI.QueryStressTests
+namespace SqlQueryStressGUI.TestEnvironment
 {
     public sealed class QueryStressTestViewModel : ViewModel
     {
