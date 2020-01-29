@@ -12,11 +12,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
         <views:Toolbar
+            Grid.Row="0"
             Connections="{Binding Path=Connections}"
             SelectedConnection="{Binding Path=ActiveTest.SelectedConnection}"
             Iterations="{Binding Path=ActiveTest.Iterations}"
@@ -24,12 +24,10 @@
             ExecuteCommand="{Binding Path=ExecuteCommandHandler}"
             NewQueryStressTestCommand="{Binding Path=NewQueryStressTestCommandHandler}"/>
 
-        <!--Change this to drive the activetest and test list changes?-->
         <views:TabbedQueryEditor
             x:Name="queryEditor"
             Grid.Row="1"
             Tests="{Binding Tests}"
             SelectedTest="{Binding ActiveTest, Mode=TwoWay}" />
-        
     </Grid>
 </Page>

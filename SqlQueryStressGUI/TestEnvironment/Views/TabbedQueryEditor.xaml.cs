@@ -170,11 +170,12 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
 
             public static QueryTab BuildQueryTab(QueryStressTestViewModel viewModel, string tabName)
             {
-                var queryEditor = new QueryEditor();
-                queryEditor.QueryChanged += (sender, args) =>
+                var queryEditor = new QueryEditor()
                 {
-                    viewModel.Query = ((QueryEditor)sender).Query;
+                    Results = viewModel.Results
                 };
+
+                queryEditor.QueryChanged += (sender, args) => viewModel.Query = ((QueryEditor)sender).Query;
 
                 var tab = new Tab()
                 {

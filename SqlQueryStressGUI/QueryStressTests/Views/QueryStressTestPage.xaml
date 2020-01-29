@@ -106,7 +106,7 @@
 
         <teviews:TabbedQueryEditor x:Name="queryEditor" Grid.Row="1" />
 
-        <views:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
+        <teviews:QueryExecutionResultsPanel Grid.Row="2" Results="{Binding Path=QueryExecutionStatisticsTable}" />
 
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>

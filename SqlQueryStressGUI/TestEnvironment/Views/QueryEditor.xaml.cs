@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SqlQueryStressEngine;
+using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,6 +11,9 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
     /// </summary>
     public partial class QueryEditor : UserControl
     {
+        public static readonly DependencyProperty QueryProperty;
+        public static readonly DependencyProperty ResultsProperty;
+
         public QueryEditor()
         {
             InitializeComponent();
@@ -19,11 +24,20 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         static QueryEditor()
         {
             QueryProperty = DependencyProperty.Register("Query", typeof(string), typeof(QueryEditor));
+
+            ResultsProperty = DependencyProperty.Register(
+                "Results",
+                typeof(ObservableCollection<QueryExecutionStatistics>),
+                typeof(QueryEditor));
         }
 
         public event EventHandler QueryChanged;
 
-        public static readonly DependencyProperty QueryProperty;
+        public ObservableCollection<QueryExecutionStatistics> Results
+        {
+            get => (ObservableCollection<QueryExecutionStatistics>)GetValue(ResultsProperty);
+            set => SetValue(ResultsProperty, value);
+        }
 
         public string Query
         {

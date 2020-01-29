@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using SqlQueryStressGUI.TestEnvironment;
 
 namespace SqlQueryStressGUI.QueryStressTests
 {
@@ -39,6 +40,8 @@ namespace SqlQueryStressGUI.QueryStressTests
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
             DbCommandSelected = new CommandHandler((dbCommand) => InvokeDbCommand((DbCommand)dbCommand));
             ParameterSettingsCommand = new CommandHandler((query) => OpenParameterSettings((string)query));
+
+            Results = new ObservableCollection<QueryExecutionStatistics>();
         }
 
         public CommandHandler GoCommandHandler { get; }
@@ -104,13 +107,6 @@ namespace SqlQueryStressGUI.QueryStressTests
             set => SetProperty(value, ref _queryParameters);
         }
 
-        private QueryExecutionStatisticsTable _queryExecutionStatisticsTable;
-        public QueryExecutionStatisticsTable QueryExecutionStatisticsTable
-        {
-            get => _queryExecutionStatisticsTable;
-            set => SetProperty(value, ref _queryExecutionStatisticsTable);
-        }
-
         private TimeSpan _elapsed;
         public TimeSpan Elapsed
         {
@@ -125,12 +121,11 @@ namespace SqlQueryStressGUI.QueryStressTests
             set => SetProperty(value, ref _avgExecutionTime);
         }
 
-        public List<QueryExecutionStatistics> Results { get; private set; }
+        public ObservableCollection<QueryExecutionStatistics> Results { get; }
 
         public void StartQueryStressTest()
         {
-            Results = new List<QueryExecutionStatistics>();
-            QueryExecutionStatisticsTable?.Clear();
+            Results.Clear();
 
             var timer = new DispatcherTimer()
             {
@@ -181,18 +176,7 @@ namespace SqlQueryStressGUI.QueryStressTests
         private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
         {
             Results.Add(executionStatistics);
-
             AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));
-
-            // This is thread safe as we only ever call it from the UI thread.
-            if (QueryExecutionStatisticsTable == null)
-            {
-                QueryExecutionStatisticsTable = QueryExecutionStatisticsTable.CreateFromExecutionResult(executionStatistics);
-            }
-            else
-            {
-                QueryExecutionStatisticsTable.AddRow(executionStatistics);
-            }
         }
 
         private void OnConnectionDropdownClosed()
