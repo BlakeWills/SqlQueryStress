@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="SqlQueryStressGUI.TestEnvironment.Views.QueryEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:SqlQueryStressGUI.TestEnvironment.Views"
+             mc:Ignorable="d"
+             x:Name="queryEditorUC"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+
+        <avalonEdit:TextEditor
+            Grid.Row="0"
+            xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+            Name="sqlEditor"
+            FontFamily="Consolas"
+            Padding="5"
+            SyntaxHighlighting="TSQL"
+            FontSize="10pt" />
+
+        <views:QueryExecutionResultsPanel Grid.Row="1" Results="{Binding ElementName=queryEditorUC, Path=Results}" />
+
+        <Grid Grid.Row="3" Background="#FFEE62">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Content="Mean Execution Time:"/>
+            <Label
+                Grid.Column="1"
+                x:Name="avgExecutionTimeLabel"
+                ContentStringFormat="hh\:mm\:ss\.fff"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Left"/>
+
+            <Label
+                Grid.Column="2"
+                x:Name="elapsedTimeLabel"
+                ContentStringFormat="hh\:mm\:ss\.fff"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Right" />
+        </Grid>
+    </Grid>
+</UserControl>

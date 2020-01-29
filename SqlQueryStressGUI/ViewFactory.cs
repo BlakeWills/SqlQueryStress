@@ -9,10 +9,30 @@ namespace SqlQueryStressGUI
     public sealed class ViewFactory : IViewFactory
     {
         private readonly Dictionary<Type, Type> _viewModelMap;
+        private KeyValuePair<Type, Type> _startupPage;
 
         public ViewFactory()
         {
             _viewModelMap = new Dictionary<Type, Type>();
+        }
+
+        public void RegisterStartupPage<TViewModel, TView>() where TView : Page
+        {
+            _startupPage = new KeyValuePair<Type, Type>(typeof(TViewModel), typeof(TView));
+        }
+
+        public Page GetStartupPage()
+        {
+            if(_startupPage.Equals(default(KeyValuePair<Type, Type>)))
+            {
+                throw new InvalidOperationException("Startup page not registered.");
+            }
+
+            var viewModel = DiContainer.Instance.ServiceProvider.GetRequiredService(_startupPage.Key);
+            var page = (Page)DiContainer.Instance.ServiceProvider.GetRequiredService(_startupPage.Value);
+            page.DataContext = viewModel;
+
+            return page;
         }
 
         public void Show<TViewModel>(TViewModel viewModel) => GetWindow(viewModel).Show();

@@ -1,0 +1,33 @@
+﻿<Page x:Class="SqlQueryStressGUI.TestEnvironment.Views.TestEnvironmentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:views="clr-namespace:SqlQueryStressGUI.TestEnvironment.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="TestEnvironment">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <views:Toolbar
+            Grid.Row="0"
+            Connections="{Binding Path=Connections}"
+            SelectedConnection="{Binding Path=ActiveTest.SelectedConnection}"
+            Iterations="{Binding Path=ActiveTest.Iterations}"
+            ThreadCount="{Binding Path=ActiveTest.ThreadCount}"
+            ExecuteCommand="{Binding Path=ExecuteCommandHandler}"
+            NewQueryStressTestCommand="{Binding Path=NewQueryStressTestCommandHandler}"
+            OpenParameterSettingsCommand="{Binding Path=OpenParameterSettingsCommand}"/>
+
+        <views:TabbedQueryEditor
+            x:Name="queryEditor"
+            Grid.Row="1"
+            Tests="{Binding Tests}"
+            SelectedTest="{Binding ActiveTest, Mode=TwoWay}" />
+    </Grid>
+</Page>

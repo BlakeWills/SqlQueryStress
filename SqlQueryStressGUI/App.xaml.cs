@@ -4,8 +4,8 @@ using SqlQueryStressGUI.DbProviders;
 using SqlQueryStressGUI.DbProviders.Views;
 using SqlQueryStressGUI.Parameters;
 using SqlQueryStressGUI.Parameters.Views;
-using SqlQueryStressGUI.QueryStressTests;
-using SqlQueryStressGUI.QueryStressTests.Views;
+using SqlQueryStressGUI.TestEnvironment;
+using SqlQueryStressGUI.TestEnvironment.Views;
 using System;
 using System.Windows;
 
@@ -45,7 +45,7 @@ namespace SqlQueryStressGUI
             services.AddTransient<MainWindow>();
 
             services.AddTransient<ParameterViewModel>();
-            services.AddTransient<QueryParameterContext>();
+            services.AddTransient<ParameterSettingsViewModelBuilder>();
             services.AddTransient<ParameterViewModelBuilder>();
 
             services.AddTransient<QueryStressTestViewModel>();
@@ -58,14 +58,15 @@ namespace SqlQueryStressGUI
 
         private void ConfigureViews(IViewFactory viewFactory, IServiceCollection services)
         {
-            services.AddTransient<QueryStressTestPage>();
-            viewFactory.Register<QueryStressTestViewModel, QueryStressTestPage>();
+            services.AddTransient<TestEnvironmentPage>();
+            services.AddTransient<TestEnvironmentViewModel>();
+            viewFactory.RegisterStartupPage<TestEnvironmentViewModel, TestEnvironmentPage>();
 
             services.AddTransient<ParameterManager>();
             viewFactory.Register<ParameterManagerViewModel, ParameterManager>();
 
             services.AddTransient<ParameterSettingsWindow>();
-            viewFactory.Register<ParameterViewModel, ParameterSettingsWindow>();
+            viewFactory.Register<ParameterSettingsWindowViewModel, ParameterSettingsWindow>();
 
             services.AddTransient<RandomNumberView>();
             viewFactory.Register<RandomNumberParameterSettings, RandomNumberView>();
