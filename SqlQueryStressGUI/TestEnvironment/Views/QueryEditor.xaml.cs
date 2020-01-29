@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace SqlQueryStressGUI.TestEnvironment.Views
 {
@@ -38,6 +39,17 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
             get => (ObservableCollection<QueryExecutionStatistics>)GetValue(ResultsProperty);
             set => SetValue(ResultsProperty, value);
         }
+
+        public Binding AvgExecutionTimeBinding
+        {
+            set => avgExecutionTimeLabel.SetBinding(ContentProperty, value);
+        }
+
+        public Binding ElapsedTimeBinding
+        {
+            set => elapsedTimeLabel.SetBinding(ContentProperty, value);
+        }
+
 
         public string Query
         {

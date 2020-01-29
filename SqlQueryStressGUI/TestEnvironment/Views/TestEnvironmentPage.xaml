@@ -12,7 +12,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
         <views:Toolbar

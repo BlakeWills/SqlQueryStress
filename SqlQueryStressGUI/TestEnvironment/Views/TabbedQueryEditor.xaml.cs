@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace SqlQueryStressGUI.TestEnvironment.Views
@@ -172,7 +173,9 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
             {
                 var queryEditor = new QueryEditor()
                 {
-                    Results = viewModel.Results
+                    Results = viewModel.Results,
+                    AvgExecutionTimeBinding = new Binding(nameof(viewModel.AverageExecutionTime)) { Source = viewModel },
+                    ElapsedTimeBinding = new Binding(nameof(viewModel.Elapsed)) { Source = viewModel }
                 };
 
                 queryEditor.QueryChanged += (sender, args) => viewModel.Query = ((QueryEditor)sender).Query;

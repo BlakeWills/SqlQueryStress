@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
         <avalonEdit:TextEditor
@@ -23,5 +24,28 @@
             FontSize="10pt" />
 
         <views:QueryExecutionResultsPanel Grid.Row="1" Results="{Binding ElementName=queryEditorUC, Path=Results}" />
+
+        <Grid Grid.Row="3" Background="#FFEE62">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Content="Mean Execution Time:"/>
+            <Label
+                Grid.Column="1"
+                x:Name="avgExecutionTimeLabel"
+                ContentStringFormat="hh\:mm\:ss\.fff"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Left"/>
+
+            <Label
+                Grid.Column="2"
+                x:Name="elapsedTimeLabel"
+                ContentStringFormat="hh\:mm\:ss\.fff"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Right" />
+        </Grid>
     </Grid>
 </UserControl>
