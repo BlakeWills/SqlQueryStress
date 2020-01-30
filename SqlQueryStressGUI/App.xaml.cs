@@ -42,6 +42,8 @@ namespace SqlQueryStressGUI
             services.AddSingleton<IViewFactory>(viewFactory);
             ConfigureViews(viewFactory, services);
 
+            ConfigureParameterSettingsViewModels(services);
+
             services.AddTransient<MainWindow>();
 
             services.AddTransient<ParameterViewModel>();
@@ -54,6 +56,7 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<DbProviderFactory>();
             services.AddTransient<DbCommandProvider>();
+            services.AddTransient<IConnectionProvider, ConnectionProvider>();
         }
 
         private void ConfigureViews(IViewFactory viewFactory, IServiceCollection services)
@@ -74,11 +77,21 @@ namespace SqlQueryStressGUI
             services.AddTransient<RandomDateRangeView>();
             viewFactory.Register<RandomDateRangeParameterSettings, RandomDateRangeView>();
 
+            services.AddTransient<MssqlParameterView>();
+            viewFactory.Register<MssqlQueryParameterSettings, MssqlParameterView>();
+
             services.AddTransient<ConnectionWindow>();
             viewFactory.Register<AddEditConnectionViewModel, ConnectionWindow>();
 
             services.AddTransient<ConnectionManager>();
             viewFactory.Register<ConnectionManagerViewModel, ConnectionManager>();
+        }
+
+        private void ConfigureParameterSettingsViewModels(IServiceCollection services)
+        {
+            services.AddTransient<RandomDateRangeParameterSettings>();
+            services.AddTransient<RandomNumberParameterSettings>();
+            services.AddTransient<MssqlQueryParameterSettings>();
         }
     }
 }
