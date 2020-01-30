@@ -6,11 +6,6 @@ namespace SqlQueryStressGUI.Parameters
     public class RandomDateRangeParameterSettings : ParameterSettingsViewModel
     {
         private IParameterValueBuilder _parameterValueBuilder;
-
-        public RandomDateRangeParameterSettings(string name)
-        {
-            Name = name;
-        }
         
         private DateTime _minValue;
         public DateTime MinValue

@@ -4,7 +4,7 @@ namespace SqlQueryStressGUI.Parameters
 {
     public abstract class ParameterSettingsViewModel : ViewModel
     {
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         public abstract IParameterValueBuilder GetParameterValueBuilder();
 

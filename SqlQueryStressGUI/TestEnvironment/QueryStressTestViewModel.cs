@@ -119,7 +119,7 @@ namespace SqlQueryStressGUI.TestEnvironment
         {
             var paramProvider = new ParameterProvider();
             var executions = ThreadCount * Iterations;
-            var paramValueBuilders = QueryParameters.Select(x => x.Settings.GetParameterValueBuilder());
+            var paramValueBuilders = QueryParameters.Select(x => x.Settings.GetParameterValueBuilder()).ToList();
 
             return paramProvider.GetParameterSets(paramValueBuilders, executions);
         }

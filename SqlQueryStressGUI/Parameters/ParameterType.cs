@@ -3,6 +3,7 @@
     public enum ParameterType
     {
         RandomNumber = 0,
-        RandomDateRange = 1
+        RandomDateRange = 1,
+        MSSQLQuery = 2
     }
 }
