@@ -14,9 +14,11 @@ namespace SqlQueryStressGUI.Parameters
         {
             QueryParameters = queryParameters;
             _viewFactory = viewFactory;
-            SettingsCommand = new CommandHandler((param) => OpenParameterSettings((ParameterViewModel)param));
 
             AvailableParameterTypes = Enum.GetNames(typeof(ParameterType));
+
+            SettingsCommand = new CommandHandler((param) => OpenParameterSettings((ParameterViewModel)param));
+            SaveAndCloseCommand = new CommandHandler((window) => Close((ICloseable)window));
         }
 
         public IEnumerable<string> AvailableParameterTypes { get; }

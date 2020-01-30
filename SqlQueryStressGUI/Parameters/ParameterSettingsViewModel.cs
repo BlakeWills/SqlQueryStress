@@ -8,6 +8,17 @@ namespace SqlQueryStressGUI.Parameters
 
         public abstract IParameterValueBuilder GetParameterValueBuilder();
 
-        public ParameterSettingsViewModel LinkedParameter { get; set; }
+        private ParameterSettingsViewModel _linkedParameter;
+        public ParameterSettingsViewModel LinkedParameter
+        {
+            get => _linkedParameter;
+            set
+            {
+                SetProperty(value, ref _linkedParameter);
+                NotifyPropertyChanged(nameof(HasLinkedParameter));
+            }
+        }
+
+        public bool HasLinkedParameter { get => LinkedParameter != null; }
     }
 }
