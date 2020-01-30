@@ -26,7 +26,7 @@
         <controls:DateTimePicker Grid.Row="1" Grid.Column="1" SelectedDateTime="{Binding MaxValue, Mode=TwoWay}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Interval" />
-        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding MaxInterval, StringFormat=hh\\:mm\\:ss}" />
+        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding MaxInterval, StringFormat=dd\\.hh\\:mm\\:ss\\.fff}" />
 
     </Grid>
 </UserControl>
