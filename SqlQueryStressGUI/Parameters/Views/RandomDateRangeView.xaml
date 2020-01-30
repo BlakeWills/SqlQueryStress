@@ -8,6 +8,9 @@
              x:Name="dateRangeView"
           d:DesignHeight="100" d:DesignWidth="600">
     <Grid Margin="10">
+        <Grid.Resources>
+            <controls:InverseBooleanConverter x:Key="inverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -20,13 +23,23 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Min Value" />
-        <controls:DateTimePicker Grid.Row="0" Grid.Column="1" SelectedDateTime="{Binding MinValue, Mode=TwoWay}" />
+        <controls:DateTimePicker
+            Grid.Row="0"
+            Grid.Column="1"
+            SelectedDateTime="{Binding MinValue, Mode=TwoWay}" IsEnabled="{Binding HasLinkedParameter, Converter={StaticResource inverter}}" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Value" />
-        <controls:DateTimePicker Grid.Row="1" Grid.Column="1" SelectedDateTime="{Binding MaxValue, Mode=TwoWay}" />
+        <controls:DateTimePicker
+            Grid.Row="1"
+            Grid.Column="1"
+            SelectedDateTime="{Binding MaxValue, Mode=TwoWay}" IsEnabled="{Binding HasLinkedParameter, Converter={StaticResource inverter}}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Interval" />
-        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding MaxInterval, StringFormat=dd\\.hh\\:mm\\:ss\\.fff}" />
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Text="{Binding MaxInterval, StringFormat=dd\\.hh\\:mm\\:ss\\.fff}" IsEnabled="{Binding HasLinkedParameter, Converter={StaticResource inverter}}" />
 
     </Grid>
 </UserControl>
