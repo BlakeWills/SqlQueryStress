@@ -14,7 +14,7 @@
             <sqs:BindingProxy x:Key="Proxy" Data="{Binding}" />
         </ToolBarTray.Resources>
         <ToolBar>
-            
+
             <Button Margin="0,0,5,0" Command="{Binding ElementName=_toolbar, Path=NewQueryStressTestCommand}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Height="18" Width="16" Fill="Black" >

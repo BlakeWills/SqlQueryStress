@@ -1,4 +1,6 @@
-﻿namespace SqlQueryStress.DbProviders.MSSQL
+﻿using SqlQueryStressEngine.Parameters;
+
+namespace SqlQueryStress.DbProviders.MSSQL
 {
     internal class MssqlQueryExecutionBuilder
     {
@@ -10,6 +12,11 @@
 
         public double ClientElapsedMilliseconds { get; set; }
 
-        public MssqlQueryExecution Build() => new MssqlQueryExecution(ElapsedMilliseconds, CpuMilliseconds, LogicalReads, ClientElapsedMilliseconds);
+        public ParameterSet QueryParameters { get; set; }
+
+        public MssqlQueryExecution Build() => new MssqlQueryExecution(ElapsedMilliseconds, CpuMilliseconds, LogicalReads, ClientElapsedMilliseconds)
+        {
+            Parameters = QueryParameters
+        };
     }
 }

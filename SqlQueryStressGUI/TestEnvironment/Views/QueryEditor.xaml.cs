@@ -28,15 +28,15 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
 
             ResultsProperty = DependencyProperty.Register(
                 "Results",
-                typeof(ObservableCollection<QueryExecutionStatistics>),
+                typeof(ObservableCollection<QueryExecution>),
                 typeof(QueryEditor));
         }
 
         public event EventHandler QueryChanged;
 
-        public ObservableCollection<QueryExecutionStatistics> Results
+        public ObservableCollection<QueryExecution> Results
         {
-            get => (ObservableCollection<QueryExecutionStatistics>)GetValue(ResultsProperty);
+            get => (ObservableCollection<QueryExecution>)GetValue(ResultsProperty);
             set => SetValue(ResultsProperty, value);
         }
 

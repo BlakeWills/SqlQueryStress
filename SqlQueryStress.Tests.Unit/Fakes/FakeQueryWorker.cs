@@ -34,16 +34,16 @@ namespace SqlQueryStressEngine.Tests.Unit.Fakes
 
         public static void ClearInstances() => Instances = new ConcurrentBag<FakeQueryWorker>();
 
-        public void Start(QueryWorkerParameters workerParameters, Action<QueryExecutionStatistics> onQueryExecutionComplete)
+        public void Start(QueryWorkerParameters workerParameters, Action<QueryExecution> onQueryExecutionComplete)
         {
             Interlocked.Add(ref _executionCount, workerParameters.Iterations);
             Interlocked.Add(ref _totalExecutionCount, workerParameters.Iterations);
 
-            onQueryExecutionComplete(new FakeQueryExecutionStatistics());
+            onQueryExecutionComplete(new FakeQueryExecution());
         }
     }
 
-    public class FakeQueryExecutionStatistics : QueryExecutionStatistics
+    public class FakeQueryExecution : QueryExecution
     {
         public override double ElapsedMilliseconds { get; }
     }

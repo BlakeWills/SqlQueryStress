@@ -16,13 +16,16 @@ namespace SqlQueryStress.DbProviders.MSSQL
 
         public void Start(
             QueryWorkerParameters workerParameters,
-            Action<QueryExecutionStatistics> onQueryExecutionComplete)
+            Action<QueryExecution> onQueryExecutionComplete)
         {
             var query = $"SET STATISTICS IO ON;\nSET STATISTICS TIME ON;\n{workerParameters.Query}";
 
             for (int i = 0; i < workerParameters.Iterations; i++)
             {
-                var builder = new MssqlQueryExecutionBuilder();
+                var builder = new MssqlQueryExecutionBuilder()
+                {
+                    QueryParameters = workerParameters.QueryParameters
+                };
 
                 using var con = new SqlConnection(workerParameters.ConnectionString);
                 using var cmd = new SqlCommand(query, con);

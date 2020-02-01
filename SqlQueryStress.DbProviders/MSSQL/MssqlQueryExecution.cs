@@ -2,7 +2,7 @@
 
 namespace SqlQueryStress.DbProviders.MSSQL
 {
-    public sealed class MssqlQueryExecution : QueryExecutionStatistics
+    public sealed class MssqlQueryExecution : QueryExecution
     {
         public MssqlQueryExecution(
             double elapsedMilliseconds,
