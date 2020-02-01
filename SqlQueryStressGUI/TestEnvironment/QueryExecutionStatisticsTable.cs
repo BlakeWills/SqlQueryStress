@@ -8,9 +8,13 @@ namespace SqlQueryStressGUI.TestEnvironment
 {
     public class QueryExecutionStatisticsTable : DataTable
     {
-        private PropertyInfo[] PropertyInfos { get; set; }
+        public const string _errorColumnHeader = "Errors";
 
+        private PropertyInfo[] PropertyInfos { get; set; }
         private readonly Dictionary<DataRow, QueryExecution> _queryExecutionMap;
+
+        private static readonly string[] _queryExecutionIgnoredPropertyNames =
+            new[] { nameof(QueryExecution.Parameters), nameof(QueryExecution.ExecutionError) };
 
         public QueryExecutionStatisticsTable()
         {
@@ -21,7 +25,7 @@ namespace SqlQueryStressGUI.TestEnvironment
         {
             var props = queryExecution.GetType()
                 .GetProperties()
-                .Where(pi => pi.Name != nameof(queryExecution.Parameters))
+                .Where(pi => !_queryExecutionIgnoredPropertyNames.Contains(pi.Name))
                 .ToArray();
 
             var dataTable = new QueryExecutionStatisticsTable()
@@ -37,6 +41,11 @@ namespace SqlQueryStressGUI.TestEnvironment
                 });
             }
 
+            dataTable.Columns.Add(new DataColumn(_errorColumnHeader, typeof(bool))
+            {
+                ReadOnly = true
+            });
+
             dataTable.AddRow(queryExecution);
 
             return dataTable;
@@ -50,6 +59,8 @@ namespace SqlQueryStressGUI.TestEnvironment
             {
                 row[prop.Name] = prop.GetValue(queryExecution);
             }
+
+            row[_errorColumnHeader] = queryExecution.ExecutionError != null;
 
             _queryExecutionMap.Add(row, queryExecution);
 

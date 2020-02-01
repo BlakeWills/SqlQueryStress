@@ -27,29 +27,36 @@ namespace SqlQueryStress.DbProviders.MSSQL
                     QueryParameters = workerParameters.QueryParameters
                 };
 
-                using var con = new SqlConnection(workerParameters.ConnectionString);
-                using var cmd = new SqlCommand(query, con);
-
-                con.Open();
-
-                con.InfoMessage += (sender, args) =>
+                try
                 {
-                    var result = _messageParser.ParseSqlInfoMessage(args);
-                    builder.CpuMilliseconds = result.CpuTime;
-                    builder.ElapsedMilliseconds = result.ElapsedTime;
-                    builder.LogicalReads = result.LogicalReads;
-                };
+                    using var con = new SqlConnection(workerParameters.ConnectionString);
+                    using var cmd = new SqlCommand(query, con);
 
-                foreach (var param in workerParameters.QueryParameters.Parameters)
-                {
-                    cmd.Parameters.AddWithValue(param.Name, param.Value);
+                    con.Open();
+
+                    con.InfoMessage += (sender, args) =>
+                    {
+                        var result = _messageParser.ParseSqlInfoMessage(args);
+                        builder.CpuMilliseconds = result.CpuTime;
+                        builder.ElapsedMilliseconds = result.ElapsedTime;
+                        builder.LogicalReads = result.LogicalReads;
+                    };
+
+                    foreach (var param in workerParameters.QueryParameters.Parameters)
+                    {
+                        cmd.Parameters.AddWithValue(param.Name, param.Value);
+                    }
+
+                    var sw = Stopwatch.StartNew();
+                    cmd.ExecuteNonQuery();
+                    sw.Stop();
+
+                    builder.ClientElapsedMilliseconds = sw.Elapsed.TotalMilliseconds;
                 }
-
-                var sw = Stopwatch.StartNew();
-                cmd.ExecuteNonQuery();
-                sw.Stop();
-
-                builder.ClientElapsedMilliseconds = sw.Elapsed.TotalMilliseconds;
+                catch(Exception ex)
+                {
+                    builder.ExecutionError = ex;
+                }
 
                 onQueryExecutionComplete(builder.Build());
             }

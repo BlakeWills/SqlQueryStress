@@ -14,8 +14,10 @@ namespace SqlQueryStressGUI.TestEnvironment
             set
             {
                 SetProperty(value, ref _queryExecution);
+
                 NotifyPropertyChanged(nameof(ExecutionStatisticsTable));
                 NotifyPropertyChanged(nameof(QueryParameters));
+                NotifyPropertyChanged(nameof(ExecutionError));
             }
         }
 
@@ -37,6 +39,11 @@ namespace SqlQueryStressGUI.TestEnvironment
         public IEnumerable<ParameterValue> QueryParameters
         {
             get => QueryExecution.Parameters?.Parameters ?? Array.Empty<ParameterValue>();
+        }
+
+        public string ExecutionError
+        {
+            get => QueryExecution.ExecutionError?.Message ?? "N/A";
         }
     }
 }

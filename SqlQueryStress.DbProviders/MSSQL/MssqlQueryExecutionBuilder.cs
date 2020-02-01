@@ -1,4 +1,5 @@
 ﻿using SqlQueryStressEngine.Parameters;
+using System;
 
 namespace SqlQueryStress.DbProviders.MSSQL
 {
@@ -14,9 +15,12 @@ namespace SqlQueryStress.DbProviders.MSSQL
 
         public ParameterSet QueryParameters { get; set; }
 
+        public Exception ExecutionError { get; set; }
+
         public MssqlQueryExecution Build() => new MssqlQueryExecution(ElapsedMilliseconds, CpuMilliseconds, LogicalReads, ClientElapsedMilliseconds)
         {
-            Parameters = QueryParameters
+            Parameters = QueryParameters,
+            ExecutionError = ExecutionError
         };
     }
 }
