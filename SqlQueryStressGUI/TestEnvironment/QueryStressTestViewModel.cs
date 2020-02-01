@@ -20,7 +20,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             _dbProviderFactory = dbProviderFactory;
 
             QueryParameters = new List<ParameterViewModel>();
-            Results = new ObservableCollection<QueryExecutionStatistics>();
+            Results = new ObservableCollection<QueryExecution>();
         }
 
         private DatabaseConnection _selectedConnection;
@@ -72,7 +72,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             set => SetProperty(value, ref _avgExecutionTime);
         }
 
-        public ObservableCollection<QueryExecutionStatistics> Results { get; }
+        public ObservableCollection<QueryExecution> Results { get; }
 
         public void StartQueryStressTest()
         {
@@ -124,7 +124,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             return paramProvider.GetParameterSets(paramValueBuilders, executions);
         }
 
-        private void AddQueryExecutionResult(QueryExecutionStatistics executionStatistics)
+        private void AddQueryExecutionResult(QueryExecution executionStatistics)
         {
             Results.Add(executionStatistics);
             AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));

@@ -1,5 +1,7 @@
 ﻿using SqlQueryStressEngine;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 
 namespace SqlQueryStressGUI.TestEnvironment
@@ -8,9 +10,19 @@ namespace SqlQueryStressGUI.TestEnvironment
     {
         private PropertyInfo[] PropertyInfos { get; set; }
 
-        public static QueryExecutionStatisticsTable CreateFromExecutionResult(QueryExecutionStatistics queryExecutionStatistics)
+        private readonly Dictionary<DataRow, QueryExecution> _queryExecutionMap;
+
+        public QueryExecutionStatisticsTable()
         {
-            var props = queryExecutionStatistics.GetType().GetProperties();
+            _queryExecutionMap = new Dictionary<DataRow, QueryExecution>();
+        }
+
+        public static QueryExecutionStatisticsTable CreateFromExecutionResult(QueryExecution queryExecution)
+        {
+            var props = queryExecution.GetType()
+                .GetProperties()
+                .Where(pi => pi.Name != nameof(queryExecution.Parameters))
+                .ToArray();
 
             var dataTable = new QueryExecutionStatisticsTable()
             {
@@ -25,21 +37,25 @@ namespace SqlQueryStressGUI.TestEnvironment
                 });
             }
 
-            dataTable.AddRow(queryExecutionStatistics);
+            dataTable.AddRow(queryExecution);
 
             return dataTable;
         }
 
-        public void AddRow(QueryExecutionStatistics queryExecutionStatistics)
+        public void AddRow(QueryExecution queryExecution)
         {
             var row = NewRow();
 
             foreach (var prop in PropertyInfos)
             {
-                row[prop.Name] = prop.GetValue(queryExecutionStatistics);
+                row[prop.Name] = prop.GetValue(queryExecution);
             }
+
+            _queryExecutionMap.Add(row, queryExecution);
 
             Rows.Add(row);
         }
+
+        public QueryExecution GetExecution(DataRow row) => _queryExecutionMap[row];
     }
 }

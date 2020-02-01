@@ -24,7 +24,7 @@ namespace SqlQueryStressEngine
 
         public string ConnectionString { get; set; }
 
-        public Action<QueryExecutionStatistics> OnQueryExecutionComplete { get; set; }
+        public Action<QueryExecution> OnQueryExecutionComplete { get; set; }
 
         public IEnumerable<ParameterSet> QueryParameters { get; set; }
 

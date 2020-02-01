@@ -7,6 +7,10 @@
              x:Name="QueryExecutionResultsPanelUC"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding ElementName=QueryExecutionResultsPanelUC, Path=ResultsTable}"/>
+        <DataGrid
+            x:Name="resultsDataGrid"
+            AutoGenerateColumns="True"
+            IsReadOnly="True"
+            ItemsSource="{Binding ElementName=QueryExecutionResultsPanelUC, Path=ResultsTable}"/>
     </Grid>
 </UserControl>

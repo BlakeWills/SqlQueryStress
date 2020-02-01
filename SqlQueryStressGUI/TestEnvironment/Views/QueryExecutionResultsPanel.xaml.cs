@@ -1,10 +1,15 @@
-﻿using SqlQueryStressEngine;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SqlQueryStressEngine;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
+using System.Xml;
 
 namespace SqlQueryStressGUI.TestEnvironment.Views
 {
@@ -14,26 +19,32 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
     public partial class QueryExecutionResultsPanel : UserControl, INotifyPropertyChanged
     {
         public static readonly DependencyProperty ResultsProperty;
+        private readonly IViewFactory _viewFactory;
 
         public QueryExecutionResultsPanel()
         {
             InitializeComponent();
+            _viewFactory = DiContainer.Instance.ServiceProvider.GetRequiredService<IViewFactory>();
+
+            OpenExecutionDetailsCommand = new CommandHandler((executionRow) => OpenExecutionDetails((DataRowView)executionRow));
         }
 
         static QueryExecutionResultsPanel()
         {
             ResultsProperty = DependencyProperty.Register(
                 "Results",
-                typeof(ObservableCollection<QueryExecutionStatistics>),
+                typeof(ObservableCollection<QueryExecution>),
                 typeof(QueryExecutionResultsPanel),
                 new PropertyMetadata(new PropertyChangedCallback(ResultsChanged)));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<QueryExecutionStatistics> Results
+        public CommandHandler OpenExecutionDetailsCommand { get; }
+
+        public ObservableCollection<QueryExecution> Results
         {
-            get => (ObservableCollection<QueryExecutionStatistics>)GetValue(ResultsProperty);
+            get => (ObservableCollection<QueryExecution>)GetValue(ResultsProperty);
             set => SetValue(ResultsProperty, value);
         }
 
@@ -49,13 +60,13 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
             var resultsPanel = (QueryExecutionResultsPanel)d;
             resultsPanel.ResultsTable = new QueryExecutionStatisticsTable();
 
-            var oldResults = (ObservableCollection<QueryExecutionStatistics>)e.OldValue;
+            var oldResults = (ObservableCollection<QueryExecution>)e.OldValue;
             if (oldResults != null)
             {
                 oldResults.CollectionChanged -= resultsPanel.Results_CollectionChanged;
             }
 
-            var results = (ObservableCollection<QueryExecutionStatistics>)e.NewValue;
+            var results = (ObservableCollection<QueryExecution>)e.NewValue;
             results.CollectionChanged += resultsPanel.Results_CollectionChanged;
         }
 
@@ -73,11 +84,16 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
 
             foreach(var result in e.NewItems)
             {
-                var executionResult = (QueryExecutionStatistics)result;
+                var executionResult = (QueryExecution)result;
 
                 if (ResultsTable.Rows.Count == 0)
                 {
                     ResultsTable = QueryExecutionStatisticsTable.CreateFromExecutionResult(executionResult);
+
+                    resultsDataGrid.Columns.Add(new DataGridTemplateColumn()
+                    {
+                        CellTemplate = GetExecutionDetailsDataTemplate()
+                    });
                 }
                 else
                 {
@@ -95,6 +111,35 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         {
             field = value;
             NotifyPropertyChanged(propertyName);
+        }
+
+        private void OpenExecutionDetails(DataRowView executionRow)
+        {
+            var queryExecution = ResultsTable.GetExecution(executionRow.Row);
+
+            var executionDetailsViewModel = new QueryExecutionDetailsViewModel
+            {
+                QueryExecution = queryExecution
+            };
+
+            _viewFactory.ShowDialog(executionDetailsViewModel);
+        }
+
+        private static DataTemplate GetExecutionDetailsDataTemplate()
+        {
+            StringReader stringReader = new StringReader(
+                @$"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""> 
+                    <Button
+                        Command = ""{{Binding ElementName={nameof(QueryExecutionResultsPanelUC)}, Path={nameof(OpenExecutionDetailsCommand)}}}""
+                        CommandParameter = ""{{Binding ElementName={nameof(resultsDataGrid)}, Path=CurrentItem}}""
+                        Content = ""Execution Details""
+                        BorderThickness=""0""
+                        Background = ""Transparent""
+                        Foreground = ""Blue"" />
+                  </DataTemplate>");
+
+            var xmlReader = XmlReader.Create(stringReader);
+            return XamlReader.Load(xmlReader) as DataTemplate;
         }
     }
 }

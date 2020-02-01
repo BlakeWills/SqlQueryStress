@@ -4,6 +4,6 @@ namespace SqlQueryStressEngine
 {
     public interface IQueryWorker
     {
-        void Start(QueryWorkerParameters workerParameters, Action<QueryExecutionStatistics> onQueryExecutionComplete);
+        void Start(QueryWorkerParameters workerParameters, Action<QueryExecution> onQueryExecutionComplete);
     }
 }

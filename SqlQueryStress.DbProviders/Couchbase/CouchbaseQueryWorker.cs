@@ -5,7 +5,7 @@ namespace SqlQueryStress.DbProviders.Couchbase
 {
     public class CouchbaseQueryWorker : IQueryWorker
     {
-        public void Start(QueryWorkerParameters workerParameters, Action<QueryExecutionStatistics> onQueryExecutionComplete)
+        public void Start(QueryWorkerParameters workerParameters, Action<QueryExecution> onQueryExecutionComplete)
         {
             throw new NotImplementedException();
         }
