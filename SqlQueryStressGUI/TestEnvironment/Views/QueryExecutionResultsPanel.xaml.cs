@@ -75,6 +75,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
             if(e.Action == NotifyCollectionChangedAction.Reset)
             {
                 ResultsTable.Clear();
+                resultsDataGrid.Columns.Clear();
             }
             
             if(e.NewItems == null)
