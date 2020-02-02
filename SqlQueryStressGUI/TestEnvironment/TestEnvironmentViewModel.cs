@@ -16,6 +16,9 @@ namespace SqlQueryStressGUI.TestEnvironment
         private readonly ParameterViewModelBuilder _parameterViewModelBuilder;
         private readonly IViewFactory _viewFactory;
 
+        private readonly int _processorCount = Environment.ProcessorCount;
+        private readonly int _defaultIterations = 10;
+
         public TestEnvironmentViewModel(
             IViewFactory viewFactory,
             IConnectionProvider connectionProvider,
@@ -107,7 +110,11 @@ namespace SqlQueryStressGUI.TestEnvironment
         private void AddNewQueryStressTest()
         {
             var newTest = DiContainer.Instance.ServiceProvider.GetRequiredService<QueryStressTestViewModel>();
+            
             newTest.SelectedConnection = Connections.First();
+            newTest.ThreadCount = _processorCount - 1; // -1 for the UI thread.
+            newTest.Iterations = _defaultIterations;
+            
             Tests.Add(newTest);
             ActiveTest = newTest;
         }
