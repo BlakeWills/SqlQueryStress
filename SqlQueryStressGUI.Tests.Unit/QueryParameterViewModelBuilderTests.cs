@@ -7,22 +7,7 @@ namespace SqlQueryStressGUI.Tests.Unit
 {
     public class QueryParameterViewModelBuilderTests
     {
-        private string _query = @"
-			SELECT
-				ProductID,
-				DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01) [Date],
-				SUM(UnitPrice * OrderQty) [TotalSales]
-			FROM
-				[Sales].[SalesOrderDetail] sod
-				JOIN [Sales].[SalesOrderHeader] soh ON soh.SalesOrderID = sod.SalesOrderID
-            WHERE
-				soh.OrderDate BETWEEN @Start AND @End
-			GROUP BY
-				ProductID,
-				DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01)
-			ORDER BY
-				[Date] DESC,
-				TotalSales DESC";
+        private string _query;
 
         private List<ParameterViewModel> _expectedViewModels;
         private List<ParameterViewModel> _viewModels;
@@ -32,7 +17,7 @@ namespace SqlQueryStressGUI.Tests.Unit
         [SetUp]
         public void Setup()
         {
-            _settingsViewModelBuilder = new ParameterSettingsViewModelBuilder();
+            _settingsViewModelBuilder = new ParameterSettingsViewModelBuilder(new ConnectionProviderStub());
             _builder = new ParameterViewModelBuilder(_settingsViewModelBuilder);
 
             _expectedViewModels = new List<ParameterViewModel>
@@ -42,6 +27,23 @@ namespace SqlQueryStressGUI.Tests.Unit
             };
 
             _viewModels = new List<ParameterViewModel>();
+
+            _query = @"
+			    SELECT
+				    ProductID,
+				    DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01) [Date],
+				    SUM(UnitPrice * OrderQty) [TotalSales]
+			    FROM
+				    [Sales].[SalesOrderDetail] sod
+				    JOIN [Sales].[SalesOrderHeader] soh ON soh.SalesOrderID = sod.SalesOrderID
+                WHERE
+				    soh.OrderDate BETWEEN @Start AND @End
+			    GROUP BY
+				    ProductID,
+				    DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01)
+			    ORDER BY
+				    [Date] DESC,
+				    TotalSales DESC";
         }
 
         [Test]
@@ -89,6 +91,19 @@ namespace SqlQueryStressGUI.Tests.Unit
             _viewModels = new List<ParameterViewModel> { startParam };
 
             _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
+
+            CollectionAssert.IsEmpty(_viewModels);
+        }
+
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void GivenEmptyQuery_ClearsParameterList(string query)
+        {
+            var startParam = new ParameterViewModel("@Start", _settingsViewModelBuilder);
+            _viewModels = new List<ParameterViewModel> { startParam };
+
+            _builder.UpdateQueryParameterViewModels(query, ref _viewModels);
 
             CollectionAssert.IsEmpty(_viewModels);
         }
