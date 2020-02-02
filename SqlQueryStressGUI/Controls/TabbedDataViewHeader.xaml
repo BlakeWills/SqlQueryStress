@@ -68,7 +68,9 @@
             Margin="5,0,5,0"
             Background="Transparent"
             BorderThickness="0"
-            Foreground="White">
+            Foreground="White"
+            Command="{Binding ElementName=_headerControl, Path=TabClosedCommand}"
+            CommandParameter="{Binding ElementName=_headerControl}">
             <TextBlock Text="X" Style="{StaticResource TextBlockActiveStyle}"/>
         </Button>
     </StackPanel>

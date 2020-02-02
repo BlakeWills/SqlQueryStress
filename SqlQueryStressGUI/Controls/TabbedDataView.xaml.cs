@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SqlQueryStressGUI.Controls
 {
@@ -12,6 +13,7 @@ namespace SqlQueryStressGUI.Controls
     {
         public static DependencyProperty ItemsSourceProperty;
         public static DependencyProperty SelectedItemProperty;
+        public static DependencyProperty TabClosedCommandProperty;
 
         public TabbedDataView()
         {
@@ -34,6 +36,11 @@ namespace SqlQueryStressGUI.Controls
                     default(Tab),
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     new PropertyChangedCallback(OnSelectedItemChanged)));
+
+            TabClosedCommandProperty = DependencyProperty.Register(
+                nameof(TabClosedCommand),
+                typeof(ICommand),
+                typeof(TabbedDataView));
         }
 
         public Tab SelectedItem
@@ -46,6 +53,12 @@ namespace SqlQueryStressGUI.Controls
         {
             get => (ObservableCollection<Tab>)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
+        }
+
+        public ICommand TabClosedCommand
+        {
+            get => (ICommand)GetValue(TabClosedCommandProperty);
+            set => SetValue(TabClosedCommandProperty, value);
         }
 
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -93,9 +106,15 @@ namespace SqlQueryStressGUI.Controls
                 SelectedItem = tab;
             });
 
+            var tabClosedCommand = new CommandHandler((tabHeader) =>
+            {
+                var tab = GetTabForHeader((TabbedDataViewHeader)tabHeader);
+                TabClosedCommand?.Execute(tab);
+            });
+
             foreach (var tab in ItemsSource)
             {
-                var tabHeader = tab.BuildHeader(headerClickedCommand);
+                var tabHeader = tab.BuildHeader(headerClickedCommand, tabClosedCommand);
                 _tabHeaderBar.Children.Add(tabHeader);
             }
 
@@ -116,12 +135,15 @@ namespace SqlQueryStressGUI.Controls
 
         public TabbedDataViewHeader Header { get; private set; }
 
-        public TabbedDataViewHeader BuildHeader(CommandHandler clickedCommandHandler)
+        public TabbedDataViewHeader BuildHeader(
+            CommandHandler clickedCommandHandler,
+            CommandHandler tabClosedCommandHandler)
         {
             var header = new TabbedDataViewHeader()
             {
                 Header = HeaderText,
-                ClickedCommand = clickedCommandHandler
+                ClickedCommand = clickedCommandHandler,
+                TabClosedCommand = tabClosedCommandHandler
             };
 
             return Header = header;

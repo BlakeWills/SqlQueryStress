@@ -11,5 +11,6 @@
     <controls:TabbedDataView
             Grid.Row="0"
             ItemsSource="{Binding ElementName=_tabbedQueryEditor, Path=Tabs}"
-            SelectedItem="{Binding ElementName=_tabbedQueryEditor, Path=SelectedTab, Mode=TwoWay}"/>
+            SelectedItem="{Binding ElementName=_tabbedQueryEditor, Path=SelectedTab, Mode=TwoWay}"
+            TabClosedCommand="{Binding ElementName=_tabbedQueryEditor, Path=QueryTabClosedCommand}"/>
 </UserControl>
