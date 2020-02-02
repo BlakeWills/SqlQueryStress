@@ -17,14 +17,47 @@ namespace SqlQueryStressGUI.Parameters
 
         public IEnumerable<string> ParameterTypes { get; }
 
+        public ParameterViewModel Parameter { get; set; }
+
+        public string ParameterType
+        {
+            get => Parameter.Type;
+            set
+            {
+                Parameter.Type = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(LinkedParameter));
+            }
+        }
+
         private IEnumerable<ParameterSettingsViewModel> _queryParameters;
         public IEnumerable<ParameterSettingsViewModel> QueryParameters
         {
             get => _queryParameters;
-            set => _queryParameters = BuildQueryParameters(value);
+            set
+            {
+                _queryParameters = BuildQueryParameters(value);
+                NotifyPropertyChanged(nameof(LinkedParameter));
+            }
         }
 
-        public ParameterViewModel Parameter { get; set; }
+        public ParameterSettingsViewModel LinkedParameter
+        {
+            get => Parameter.Settings.LinkedParameter ?? QueryParameters.FirstOrDefault(x => x is NullParameterSettingsViewModel);
+            set
+            {
+                NotifyPropertyChanged();
+
+                if(value is NullParameterSettingsViewModel)
+                {
+                    Parameter.Settings.LinkedParameter = null;
+                }
+                else
+                {
+                    Parameter.Settings.LinkedParameter = value;
+                }
+            }
+        }
 
         private IEnumerable<ParameterSettingsViewModel> BuildQueryParameters(IEnumerable<ParameterSettingsViewModel> parameters)
         {

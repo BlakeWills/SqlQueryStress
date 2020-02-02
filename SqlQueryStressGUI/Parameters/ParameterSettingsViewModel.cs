@@ -19,6 +19,9 @@ namespace SqlQueryStressGUI.Parameters
             }
         }
 
-        public bool HasLinkedParameter { get => LinkedParameter != null; }
+        public bool HasLinkedParameter
+        {
+            get => LinkedParameter != null;
+        }
     }
 }
