@@ -59,7 +59,7 @@ namespace SqlQueryStressGUI.DbProviders
 
         private string GetFilePath(DatabaseConnection connection)
         {
-            return Path.Combine(_connectionDirectory, $"{connection.Id}.txt");
+            return Path.Combine(_connectionDirectory, $"{connection.Id}.json");
         }
     }
 }

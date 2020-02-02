@@ -56,7 +56,7 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<DbProviderFactory>();
             services.AddTransient<DbCommandProvider>();
-            services.AddTransient<IConnectionProvider, ConnectionProvider>();
+            services.AddSingleton<IConnectionProvider, ConnectionProvider>();
         }
 
         private void ConfigureViews(IViewFactory viewFactory, IServiceCollection services)
