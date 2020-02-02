@@ -107,5 +107,25 @@ namespace SqlQueryStressGUI.Tests.Unit
 
             CollectionAssert.IsEmpty(_viewModels);
         }
+
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void QueryHasParameters_GivenEmptyQuery_ReturnsFalse(string query)
+        {
+            Assert.IsFalse(_builder.QueryHasParameters(query));
+        }
+
+        [Test]
+        public void QueryHasParameters_GivenQueryWithNoParameters_ReturnsFalse()
+        {
+            Assert.IsFalse(_builder.QueryHasParameters("SELECT * FROM myTable"));
+        }
+
+        [Test]
+        public void QueryHasParameters_GivenQueryWithParameters_ReturnsTrue()
+        {
+            Assert.IsTrue(_builder.QueryHasParameters("SELECT * FROM myTable WHERE myColumn = @myValue"));
+        }
     }
 }

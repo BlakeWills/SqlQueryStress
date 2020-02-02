@@ -1,0 +1,25 @@
+﻿<Window x:Class="SqlQueryStressGUI.TestEnvironment.Views.InvalidQueryStressTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Name="invalidQueryStressTestWindow"
+        Title="Invalid Query Stress Test" Height="200" Width="400">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="{Binding Message}" />
+        
+        <Button
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            Width="100"
+            Content="OK"
+            Command="{Binding CloseCommand}"
+            CommandParameter="{Binding ElementName=invalidQueryStressTestWindow}" />
+    </Grid>
+</Window>

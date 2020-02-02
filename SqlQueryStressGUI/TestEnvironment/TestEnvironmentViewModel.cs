@@ -42,10 +42,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             AddNewQueryStressTest();
             OnConnectionChanged();
 
-            ExecuteCommandHandler = new CommandHandler((_) => {
-                ActiveTest.StartQueryStressTest();
-                }, canExecute: (_) => IsConnectionValid());
-
+            ExecuteCommandHandler = new CommandHandler((_) => Execute());
             NewQueryStressTestCommandHandler = new CommandHandler((_) => AddNewQueryStressTest());
             ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
@@ -93,6 +90,21 @@ namespace SqlQueryStressGUI.TestEnvironment
             set => SetProperty(value, ref _dbCommands);
         }
 
+        public void Execute()
+        {
+            var validationResult = ValidateActiveTest();
+
+            if(validationResult.IsTestValid())
+            {
+                ActiveTest.StartQueryStressTest();
+            }
+            else
+            {
+                var invalidTestViewModel = new InvalidQueryStressTestViewModel() { ValidationResult = validationResult };
+                _viewFactory.ShowDialog(invalidTestViewModel);
+            }
+        }
+
         private ObservableCollection<DatabaseConnection> BuildConnectionList(IEnumerable<DatabaseConnection> connections)
         {
             return new ObservableCollection<DatabaseConnection>(connections.Append(new DatabaseConnection
@@ -100,6 +112,24 @@ namespace SqlQueryStressGUI.TestEnvironment
                 Name = _connectionManagerText,
                 DbProvider = DbProvider.NotSpecified
             }));
+        }
+
+        private QueryStressTestValidationResult ValidateActiveTest()
+        {
+            return new QueryStressTestValidationResult
+            {
+                ThreadCountValid = ActiveTest.ThreadCount > 0,
+                IterationsValid = ActiveTest.Iterations > 0,
+                QueryValid = !string.IsNullOrWhiteSpace(ActiveTest.Query),
+                QueryParametersValid = IsQueryParametersValid(),
+                ConnectionValid = IsConnectionValid()
+            };
+        }
+
+        private bool IsQueryParametersValid()
+        {
+            return (string.IsNullOrWhiteSpace(ActiveTest.Query) && !ActiveTest.QueryParameters.Any())
+                || (!string.IsNullOrWhiteSpace(ActiveTest.Query) && ActiveTest.QueryParameters.Any());
         }
 
         private bool IsConnectionValid()
