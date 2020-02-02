@@ -13,6 +13,7 @@ namespace SqlQueryStressGUI.Controls
     {
         public static DependencyProperty HeaderProperty;
         public static DependencyProperty ClickedCommandProperty;
+        public static DependencyProperty TabClosedCommandProperty;
 
         public TabbedDataViewHeader()
         {
@@ -23,6 +24,7 @@ namespace SqlQueryStressGUI.Controls
         {
             HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(TabbedDataViewHeader));
             ClickedCommandProperty = DependencyProperty.Register(nameof(ClickedCommand), typeof(ICommand), typeof(TabbedDataViewHeader));
+            TabClosedCommandProperty = DependencyProperty.Register(nameof(TabClosedCommand), typeof(ICommand), typeof(TabbedDataViewHeader));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -48,6 +50,12 @@ namespace SqlQueryStressGUI.Controls
         {
             get => (ICommand)GetValue(ClickedCommandProperty);
             set => SetValue(ClickedCommandProperty, value);
+        }
+
+        public ICommand TabClosedCommand
+        {
+            get => (ICommand)GetValue(TabClosedCommandProperty);
+            set => SetValue(TabClosedCommandProperty, value);
         }
 
         private void OnHeaderClicked(object sender, MouseButtonEventArgs e)

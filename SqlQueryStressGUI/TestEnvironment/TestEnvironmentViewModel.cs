@@ -48,6 +48,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
             DbCommandSelected = new CommandHandler((dbCommand) => InvokeDbCommand((DbCommand)dbCommand));
             OpenParameterSettingsCommand = new CommandHandler((_) => OpenParameterSettings());
+            RemoveTestCommand = new CommandHandler((test) => RemoveTest((QueryStressTestViewModel)test));
         }
 
         public CommandHandler ExecuteCommandHandler { get; }
@@ -61,6 +62,8 @@ namespace SqlQueryStressGUI.TestEnvironment
         public CommandHandler DbCommandSelected { get; }
 
         public CommandHandler OpenParameterSettingsCommand { get; }
+
+        public CommandHandler RemoveTestCommand { get; }
 
         private QueryStressTestViewModel _activeTest;
         public QueryStressTestViewModel ActiveTest
@@ -128,8 +131,8 @@ namespace SqlQueryStressGUI.TestEnvironment
 
         private bool IsQueryParametersValid()
         {
-            return (string.IsNullOrWhiteSpace(ActiveTest.Query) && !ActiveTest.QueryParameters.Any())
-                || (!string.IsNullOrWhiteSpace(ActiveTest.Query) && ActiveTest.QueryParameters.Any());
+            var hasParams = _parameterViewModelBuilder.QueryHasParameters(ActiveTest.Query);
+            return !hasParams || (hasParams && ActiveTest.QueryParameters.Any());
         }
 
         private bool IsConnectionValid()
@@ -188,6 +191,21 @@ namespace SqlQueryStressGUI.TestEnvironment
                 var queryParams = ActiveTest.QueryParameters.ToList();
                 _parameterViewModelBuilder.UpdateQueryParameterViewModels(ActiveTest.Query, ref queryParams);
                 ActiveTest.QueryParameters = queryParams;
+            }
+        }
+
+        private void RemoveTest(QueryStressTestViewModel test)
+        {
+            Tests.Remove(test);
+
+            if(!Tests.Any())
+            {
+                AddNewQueryStressTest();
+            }
+
+            if (ActiveTest == test)
+            {
+                ActiveTest = Tests.First();
             }
         }
     }

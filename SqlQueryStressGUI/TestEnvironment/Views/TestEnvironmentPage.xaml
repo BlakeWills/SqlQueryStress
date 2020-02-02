@@ -28,6 +28,7 @@
             x:Name="queryEditor"
             Grid.Row="1"
             Tests="{Binding Tests}"
-            SelectedTest="{Binding ActiveTest, Mode=TwoWay}" />
+            SelectedTest="{Binding ActiveTest, Mode=TwoWay}"
+            RemoveQueryCommand="{Binding RemoveTestCommand}"/>
     </Grid>
 </Page>

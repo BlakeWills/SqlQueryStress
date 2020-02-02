@@ -1,4 +1,5 @@
 ﻿using SqlQueryStressGUI.Controls;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -19,6 +20,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         public static readonly DependencyProperty SelectedTestProperty;
         public static readonly DependencyProperty TestsProperty;
         public static readonly DependencyProperty NewQueryCommandProperty;
+        public static readonly DependencyProperty RemoveQueryCommandProperty;
 
         private List<QueryTab> _queryTabs;
 
@@ -27,6 +29,8 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
             InitializeComponent();
 
             _queryTabs = new List<QueryTab>();
+
+            QueryTabClosedCommand = new CommandHandler((tab) => CloseTab((Tab)tab));
         }
 
         static TabbedQueryEditor()
@@ -44,6 +48,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
                 new PropertyMetadata(new PropertyChangedCallback(OnSelectedTestChanged)));
 
             NewQueryCommandProperty = DependencyProperty.Register(nameof(NewQueryCommand), typeof(ICommand), typeof(TabbedQueryEditor));
+            RemoveQueryCommandProperty = DependencyProperty.Register(nameof(RemoveQueryCommand), typeof(ICommand), typeof(TabbedQueryEditor));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -52,6 +57,23 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         {
             get => (ICommand)GetValue(NewQueryCommandProperty);
             set => SetValue(NewQueryCommandProperty, value);
+        }
+
+        private CommandHandler _queryTabClosedCommand;
+        public CommandHandler QueryTabClosedCommand
+        {
+            get => _queryTabClosedCommand;
+            private set
+            {
+                _queryTabClosedCommand = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ICommand RemoveQueryCommand
+        {
+            get => (ICommand)GetValue(RemoveQueryCommandProperty);
+            set => SetValue(RemoveQueryCommandProperty, value);
         }
 
         public ObservableCollection<QueryStressTestViewModel> Tests
@@ -143,6 +165,12 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
 
             tabbedEditor.TryGetQueryTab(selectedTest, out var selectedQueryTab);
             tabbedEditor.SelectedTab = selectedQueryTab.Tab;
+        }
+
+        private void CloseTab(Tab tab)
+        {
+            TryGetQueryTab(tab, out var queryTab);
+            RemoveQueryCommand.Execute(queryTab.Query);
         }
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
