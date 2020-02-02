@@ -17,9 +17,16 @@ namespace SqlQueryStressGUI.Parameters
 
         public void UpdateQueryParameterViewModels(string query, ref List<ParameterViewModel> viewModels)
         {
-            var paramMatches = _paramRegex.Matches(query);
             var newViewModels = new List<ParameterViewModel>();
 
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                viewModels = newViewModels;
+                return;
+            }
+
+            var paramMatches = _paramRegex.Matches(query);
+            
             foreach(Match match in paramMatches)
             {
                 var existingViewModel = viewModels.FirstOrDefault(x => x.Name == match.Value);

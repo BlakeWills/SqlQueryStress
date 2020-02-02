@@ -1,24 +1,30 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using SqlQueryStressGUI.DbProviders;
 using System;
 
 namespace SqlQueryStressGUI.Parameters
 {
     public class ParameterSettingsViewModelBuilder
     {
+        private readonly IConnectionProvider _connectionProvider;
+
+        public ParameterSettingsViewModelBuilder(IConnectionProvider connectionProvider)
+        {
+            _connectionProvider = connectionProvider;
+        }
+
         public ParameterSettingsViewModel Build(ParameterType parameterType, string name)
         {
-            var paramSettingsType = GetParameterSettingsType(parameterType);
-            var viewModel = (ParameterSettingsViewModel)DiContainer.Instance.ServiceProvider.GetRequiredService(paramSettingsType);
+            var viewModel = GetParameterSettingsViewModel(parameterType);
             viewModel.Name = name;
 
             return viewModel;
         }
 
-        private Type GetParameterSettingsType(ParameterType parameterType) => parameterType switch
+        private ParameterSettingsViewModel GetParameterSettingsViewModel(ParameterType parameterType) => parameterType switch
         {
-            ParameterType.RandomDateRange => typeof(RandomDateRangeParameterSettings),
-            ParameterType.RandomNumber => typeof(RandomNumberParameterSettings),
-            ParameterType.MSSQLQuery => typeof(MssqlQueryParameterSettings),
+            ParameterType.RandomDateRange => new RandomDateRangeParameterSettings(),
+            ParameterType.RandomNumber => new RandomNumberParameterSettings(),
+            ParameterType.MSSQLQuery => new MssqlQueryParameterSettings(_connectionProvider),
             _ => throw new ArgumentException()
         };
     }
