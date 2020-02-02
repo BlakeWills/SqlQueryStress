@@ -45,5 +45,10 @@ namespace SqlQueryStressGUI.Parameters
 
             viewModels = newViewModels;
         }
+
+        public bool QueryHasParameters(string query)
+        {
+            return !string.IsNullOrWhiteSpace(query) && _paramRegex.Matches(query).Any();
+        }
     }
 }

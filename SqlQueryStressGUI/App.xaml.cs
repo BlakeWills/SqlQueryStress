@@ -88,6 +88,9 @@ namespace SqlQueryStressGUI
 
             services.AddTransient<QueryExecutionDetailsWindow>();
             viewFactory.Register<QueryExecutionDetailsViewModel, QueryExecutionDetailsWindow>();
+
+            services.AddTransient<InvalidQueryStressTestWindow>();
+            viewFactory.Register<InvalidQueryStressTestViewModel, InvalidQueryStressTestWindow>();
         }
 
         private void ConfigureParameterSettingsViewModels(IServiceCollection services)
