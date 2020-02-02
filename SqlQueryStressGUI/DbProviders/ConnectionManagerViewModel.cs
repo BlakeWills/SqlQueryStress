@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -15,9 +16,8 @@ namespace SqlQueryStressGUI.DbProviders
         {
             _connectionProvider = connectionProvider;
             _viewFactory = viewFactory;
-            _connectionProvider.ConnectionsChanged += ConnectionProvider_ConnectionsChanged;
 
-            var connectionVms = _connectionProvider.GetConnections().Select(x => BuildConnectionViewModel(x));
+            var connectionVms = GetConnections();
 
             Connections = new ObservableCollection<AddEditConnectionViewModel>(connectionVms);
 
@@ -43,6 +43,12 @@ namespace SqlQueryStressGUI.DbProviders
             set => SetProperty(value, ref _connections);
         }
 
+        private ObservableCollection<AddEditConnectionViewModel> GetConnections()
+        {
+            return new ObservableCollection<AddEditConnectionViewModel>(
+                _connectionProvider.GetConnections().Select(x => BuildConnectionViewModel(x)));
+        }
+
         private void ShowConnectionWindow(AddEditConnectionViewModel connectionViewModel = null)
         {
             if (connectionViewModel == null)
@@ -51,11 +57,8 @@ namespace SqlQueryStressGUI.DbProviders
             }
 
             _viewFactory.ShowDialog(connectionViewModel);
-        }
 
-        private void ConnectionProvider_ConnectionsChanged(object sender, ConnectionsChangedEventArgs e)
-        {
-            Connections = new ObservableCollection<AddEditConnectionViewModel>(e.Connections.Select(x => BuildConnectionViewModel(x)));
+            Connections = GetConnections();
         }
 
         private AddEditConnectionViewModel BuildConnectionViewModel(DatabaseConnection connection)
@@ -72,6 +75,8 @@ namespace SqlQueryStressGUI.DbProviders
         private void DeleteConnection(AddEditConnectionViewModel connectionViewModel)
         {
             _connectionProvider.DeleteConnection(connectionViewModel.ToDatabaseConnection());
+
+            Connections = GetConnections();
         }
     }
 }

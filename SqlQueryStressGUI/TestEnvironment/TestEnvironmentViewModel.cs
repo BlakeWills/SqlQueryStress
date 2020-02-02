@@ -30,6 +30,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             {
                 Connections = BuildConnectionList(args.Connections);
                 ActiveTest.SelectedConnection = Connections.First();
+                ExecuteCommandHandler?.RaiseCanExecuteChanged();
             };
 
             Connections = BuildConnectionList(_connectionProvider.GetConnections());
