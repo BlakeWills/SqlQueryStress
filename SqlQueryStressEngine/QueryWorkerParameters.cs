@@ -1,4 +1,5 @@
 ﻿using SqlQueryStressEngine.Parameters;
+using System.Threading;
 
 namespace SqlQueryStressEngine
 {
@@ -11,5 +12,7 @@ namespace SqlQueryStressEngine
         public string Query { get; set; }
 
         public ParameterSet QueryParameters { get; set; }
+
+        public CancellationToken CancellationToken { get; set; }
     }
 }

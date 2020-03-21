@@ -20,7 +20,8 @@ namespace SqlQueryStress.DbProviders.MSSQL
         {
             var query = $"SET STATISTICS XML ON;\n{workerParameters.Query}";
 
-            for (int i = 0; i < workerParameters.Iterations; i++)
+            var iteration = 0;
+            while(iteration < workerParameters.Iterations && !workerParameters.CancellationToken.IsCancellationRequested)
             {
                 var builder = new MssqlQueryExecutionBuilder()
                 {
@@ -70,6 +71,7 @@ namespace SqlQueryStress.DbProviders.MSSQL
                 }
 
                 onQueryExecutionComplete(builder.Build());
+                iteration++;
             }
         }
     }

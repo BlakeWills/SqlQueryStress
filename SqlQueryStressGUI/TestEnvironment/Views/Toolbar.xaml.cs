@@ -16,6 +16,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         public static readonly DependencyProperty IterationsProperty;
         public static readonly DependencyProperty ThreadCountProperty;
         public static readonly DependencyProperty ExecuteCommandProperty;
+        public static readonly DependencyProperty StopCommandProperty;
         public static readonly DependencyProperty NewQueryStressTestCommandProperty;
         public static readonly DependencyProperty OpenParameterSettingsCommandProperty;
 
@@ -47,6 +48,7 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
                 new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
             ExecuteCommandProperty = DependencyProperty.Register(nameof(ExecuteCommand), typeof(ICommand), typeof(Toolbar));
+            StopCommandProperty = DependencyProperty.Register(nameof(StopCommand), typeof(ICommand), typeof(Toolbar));
             NewQueryStressTestCommandProperty = DependencyProperty.Register(nameof(NewQueryStressTestCommand), typeof(ICommand), typeof(Toolbar));
             OpenParameterSettingsCommandProperty = DependencyProperty.Register(nameof(OpenParameterSettingsCommand), typeof(ICommand), typeof(Toolbar));
         }
@@ -79,6 +81,12 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
         {
             get => (ICommand)GetValue(ExecuteCommandProperty);
             set => SetValue(ExecuteCommandProperty, value);
+        }
+
+        public ICommand StopCommand
+        {
+            get => (ICommand)GetValue(StopCommandProperty);
+            set => SetValue(StopCommandProperty, value);
         }
 
         public ICommand NewQueryStressTestCommand

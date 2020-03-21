@@ -15,6 +15,8 @@ namespace SqlQueryStressGUI.TestEnvironment
     {
         private readonly DbProviderFactory _dbProviderFactory;
 
+        private QueryStressTest _test;
+
         public QueryStressTestViewModel(DbProviderFactory dbProviderFactory)
         {
             _dbProviderFactory = dbProviderFactory;
@@ -83,22 +85,22 @@ namespace SqlQueryStressGUI.TestEnvironment
                 Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 25)
             };
 
-            var test = BuildQueryStressTest();
+            _test = BuildQueryStressTest();
 
-            test.StressTestComplete += (sender, args) =>
+            _test.StressTestComplete += (sender, args) =>
             {
                 timer.Stop();
-                Elapsed = test.Elapsed;
+                Elapsed = _test.Elapsed;
             };
 
             timer.Tick += (sender, args) =>
             {
-                Elapsed = test.Elapsed;
+                Elapsed = _test.Elapsed;
             };
 
             timer.Start();
 
-            test.BeginInvoke();
+            _test.BeginInvoke();
         }
 
         private QueryStressTest BuildQueryStressTest() => new QueryStressTest
@@ -128,6 +130,11 @@ namespace SqlQueryStressGUI.TestEnvironment
         {
             Results.Add(executionStatistics);
             AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));
+        }
+
+        public void RequestStop()
+        {
+            _test.RequestCancellation();
         }
     }
 }
