@@ -50,6 +50,10 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
             set => elapsedTimeLabel.SetBinding(ContentProperty, value);
         }
 
+        public Binding TestStateBinding
+        {
+            set => testStateLabel.SetBinding(ContentProperty, value);
+        }
 
         public string Query
         {

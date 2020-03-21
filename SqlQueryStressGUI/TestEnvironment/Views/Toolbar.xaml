@@ -74,6 +74,16 @@
                 </StackPanel>
             </Button>
 
+            <Button
+                Margin="0,0,5,0"
+                Command="{Binding ElementName=_toolbar, Path=StopCommand}">
+                <Rectangle Height="18" Width="16" Fill="Red" >
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_stop}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+
             <Separator Margin="5,0,5,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
 
             <ext:DropdownButton>

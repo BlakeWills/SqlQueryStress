@@ -21,6 +21,7 @@
             Iterations="{Binding Path=ActiveTest.Iterations}"
             ThreadCount="{Binding Path=ActiveTest.ThreadCount}"
             ExecuteCommand="{Binding Path=ExecuteCommandHandler}"
+            StopCommand="{Binding Path=StopCommandHandler}"
             NewQueryStressTestCommand="{Binding Path=NewQueryStressTestCommandHandler}"
             OpenParameterSettingsCommand="{Binding Path=OpenParameterSettingsCommand}"/>
 

@@ -15,6 +15,8 @@ namespace SqlQueryStressGUI.TestEnvironment
     {
         private readonly DbProviderFactory _dbProviderFactory;
 
+        private QueryStressTest _test;
+
         public QueryStressTestViewModel(DbProviderFactory dbProviderFactory)
         {
             _dbProviderFactory = dbProviderFactory;
@@ -72,6 +74,13 @@ namespace SqlQueryStressGUI.TestEnvironment
             set => SetProperty(value, ref _avgExecutionTime);
         }
 
+        private QueryStressTestState _state;
+        public QueryStressTestState State
+        {
+            get => _state;
+            set => SetProperty(value, ref _state);
+        }
+
         public ObservableCollection<QueryExecution> Results { get; }
 
         public void StartQueryStressTest()
@@ -83,22 +92,24 @@ namespace SqlQueryStressGUI.TestEnvironment
                 Interval = new TimeSpan(0, 0, 0, 0, milliseconds: 25)
             };
 
-            var test = BuildQueryStressTest();
+            _test = BuildQueryStressTest();
 
-            test.StressTestComplete += (sender, args) =>
+            _test.StressTestComplete += (sender, args) =>
             {
                 timer.Stop();
-                Elapsed = test.Elapsed;
+                Elapsed = _test.Elapsed;
+                State = _test.State;
             };
 
             timer.Tick += (sender, args) =>
             {
-                Elapsed = test.Elapsed;
+                Elapsed = _test.Elapsed;
+                State = _test.State;
             };
 
             timer.Start();
 
-            test.BeginInvoke();
+            _test.BeginInvoke();
         }
 
         private QueryStressTest BuildQueryStressTest() => new QueryStressTest
@@ -128,6 +139,11 @@ namespace SqlQueryStressGUI.TestEnvironment
         {
             Results.Add(executionStatistics);
             AverageExecutionTime = TimeSpan.FromMilliseconds(Results.Average(x => x.ElapsedMilliseconds));
+        }
+
+        public void RequestStop()
+        {
+            _test.RequestCancellation();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace SqlQueryStressEngine
         private int _completeThreads = 0;
         private Stopwatch _stopwatch;
         private readonly object _mutex = new object();
+        private CancellationTokenSource _cancellationTokenSource;
 
         public IDbProvider DbProvider { get; set; }
 
@@ -27,6 +28,8 @@ namespace SqlQueryStressEngine
         public Action<QueryExecution> OnQueryExecutionComplete { get; set; }
 
         public IEnumerable<ParameterSet> QueryParameters { get; set; }
+
+        public QueryStressTestState State { get; private set; } = QueryStressTestState.NotStarted;
 
         public event EventHandler StressTestComplete;
 
@@ -52,24 +55,28 @@ namespace SqlQueryStressEngine
             SetIsRunning();
 
             DbProvider.BeforeTestStart();
+
+            _cancellationTokenSource = new CancellationTokenSource();
             
-            _threads = GetWorkerThreads();
+            _threads = GetWorkerThreads(_cancellationTokenSource.Token);
             _stopwatch = Stopwatch.StartNew();
 
             for (int i = 0; i < ThreadCount; i++)
             {
                 _threads[i].Start();
             }
+
+            State = QueryStressTestState.Executing;
         }
 
-        private Thread[] GetWorkerThreads()
+        private Thread[] GetWorkerThreads(CancellationToken cancellationToken)
         {
             var threads = new Thread[ThreadCount];
 
             for (int i = 0; i < ThreadCount; i++)
             {
                 var worker = DbProvider.GetQueryWorker();
-                var workerParameters = GetQueryWorkerParameters(i);
+                var workerParameters = GetQueryWorkerParameters(i, cancellationToken);
 
                 var thread = new Thread(() =>
                 {
@@ -79,6 +86,11 @@ namespace SqlQueryStressEngine
                     if (completedThreads == ThreadCount)
                     {
                         _stopwatch.Stop();
+
+                        State = workerParameters.CancellationToken.IsCancellationRequested
+                            ? QueryStressTestState.Stopped
+                            : QueryStressTestState.Complete;
+
                         StressTestComplete?.Invoke(this, new EventArgs());
                     }
                 });
@@ -104,7 +116,7 @@ namespace SqlQueryStressEngine
             }
         }
 
-        private QueryWorkerParameters GetQueryWorkerParameters(int workerId)
+        private QueryWorkerParameters GetQueryWorkerParameters(int workerId, CancellationToken cancellationToken)
         {
             var parameters = QueryParameters.Any() ? QueryParameters.ElementAt(workerId) : new ParameterSet();
 
@@ -113,7 +125,8 @@ namespace SqlQueryStressEngine
                 Iterations = Iterations,
                 ConnectionString = ConnectionString,
                 Query = Query,
-                QueryParameters = parameters
+                QueryParameters = parameters,
+                CancellationToken = cancellationToken
             };
         }
 
@@ -127,6 +140,19 @@ namespace SqlQueryStressEngine
             foreach (var t in _threads)
             {
                 t.Join();
+            }
+        }
+
+        public void RequestCancellation()
+        {
+            if(IsRunning)
+            {
+                _cancellationTokenSource.Cancel();
+                State = QueryStressTestState.Stopping;
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot cancel a test that is not running.");
             }
         }
     }

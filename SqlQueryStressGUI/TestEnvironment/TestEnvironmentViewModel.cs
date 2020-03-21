@@ -43,6 +43,7 @@ namespace SqlQueryStressGUI.TestEnvironment
             OnConnectionChanged();
 
             ExecuteCommandHandler = new CommandHandler((_) => Execute());
+            StopCommandHandler = new CommandHandler((_) => Stop());
             NewQueryStressTestCommandHandler = new CommandHandler((_) => AddNewQueryStressTest());
             ConnectionDropdownClosedCommand = new CommandHandler((_) => OnConnectionDropdownClosed());
             ConnectionChangedCommand = new CommandHandler((_) => OnConnectionChanged());
@@ -52,6 +53,8 @@ namespace SqlQueryStressGUI.TestEnvironment
         }
 
         public CommandHandler ExecuteCommandHandler { get; }
+        
+        public CommandHandler StopCommandHandler { get; }
 
         public CommandHandler NewQueryStressTestCommandHandler { get; }
 
@@ -106,6 +109,11 @@ namespace SqlQueryStressGUI.TestEnvironment
                 var invalidTestViewModel = new InvalidQueryStressTestViewModel() { ValidationResult = validationResult };
                 _viewFactory.ShowDialog(invalidTestViewModel);
             }
+        }
+
+        public void Stop()
+        {
+            ActiveTest.RequestStop();
         }
 
         private ObservableCollection<DatabaseConnection> BuildConnectionList(IEnumerable<DatabaseConnection> connections)

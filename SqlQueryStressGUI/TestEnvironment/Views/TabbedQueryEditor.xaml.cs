@@ -202,7 +202,8 @@ namespace SqlQueryStressGUI.TestEnvironment.Views
                 {
                     Results = viewModel.Results,
                     AvgExecutionTimeBinding = new Binding(nameof(viewModel.AverageExecutionTime)) { Source = viewModel },
-                    ElapsedTimeBinding = new Binding(nameof(viewModel.Elapsed)) { Source = viewModel }
+                    ElapsedTimeBinding = new Binding(nameof(viewModel.Elapsed)) { Source = viewModel },
+                    TestStateBinding = new Binding(nameof(viewModel.State)) { Source = viewModel }
                 };
 
                 queryEditor.QueryChanged += (sender, args) => viewModel.Query = ((QueryEditor)sender).Query;
