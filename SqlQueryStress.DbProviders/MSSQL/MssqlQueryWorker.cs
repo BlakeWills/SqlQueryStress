@@ -18,7 +18,7 @@ namespace SqlQueryStress.DbProviders.MSSQL
             QueryWorkerParameters workerParameters,
             Action<QueryExecution> onQueryExecutionComplete)
         {
-            var query = $"SET STATISTICS IO ON;\nSET STATISTICS TIME ON;\n{workerParameters.Query}";
+            var query = $"SET STATISTICS IO ON;\nSET STATISTICS TIME ON;\nSET STATISTICS XML ON;\n{workerParameters.Query}";
 
             for (int i = 0; i < workerParameters.Iterations; i++)
             {
@@ -48,8 +48,19 @@ namespace SqlQueryStress.DbProviders.MSSQL
                     }
 
                     var sw = Stopwatch.StartNew();
-                    cmd.ExecuteNonQuery();
-                    sw.Stop();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        // Don't include time to read the plan as part of the client execution time
+                        sw.Stop();
+
+                        if (reader.NextResult())
+                        {
+                            while (reader.Read())
+                            {
+                                builder.PlanXml = reader.GetString(0);
+                            }
+                        }
+                    }
 
                     builder.ClientElapsedMilliseconds = sw.Elapsed.TotalMilliseconds;
                 }

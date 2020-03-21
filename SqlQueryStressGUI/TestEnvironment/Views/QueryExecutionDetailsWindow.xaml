@@ -4,13 +4,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Query Execution Details" Height="400" Width="550">
+        Title="Query Execution Details" Height="600" Width="550">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -31,5 +33,28 @@
 
         <Label Grid.Row="4" Content="Query Parameters" Padding="0" Margin="0,10,0,10" />
         <DataGrid Grid.Row="5" ItemsSource="{Binding QueryParameters}" AutoGenerateColumns="True" IsReadOnly="True"/>
+
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Execution Plan" Padding="0" Margin="0,10,0,10" />
+            <Button Grid.Column="1" Content="Copy" HorizontalAlignment="Right" Margin="0,0,10,0" BorderThickness="0" Background="Transparent" Command="{Binding CopyExecutionPlanCommand}"/>
+            <Button Grid.Column="2" Content="Save As..." HorizontalAlignment="Right" Margin="0" BorderThickness="0" Background="Transparent" Command="{Binding SaveExecutionPlanCommand}"/>
+        </Grid>
+        
+        <Border Grid.Row="7" BorderBrush="#688CAF" BorderThickness="0.5">
+            <Border BorderBrush="#F5F6F7" BorderThickness="0.5">
+                <ScrollViewer  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <TextBox Background="Transparent"
+                         BorderThickness="0"
+                         Text="{Binding ExecutionPlan, Mode=OneTime}"
+                         IsReadOnly="True"
+                         TextWrapping="Wrap" />
+                </ScrollViewer>
+            </Border>
+        </Border>
     </Grid>
 </Window>
