@@ -29,6 +29,8 @@ namespace SqlQueryStressEngine
 
         public IEnumerable<ParameterSet> QueryParameters { get; set; }
 
+        public QueryStressTestState State { get; private set; } = QueryStressTestState.NotStarted;
+
         public event EventHandler StressTestComplete;
 
         public TimeSpan Elapsed
@@ -63,6 +65,8 @@ namespace SqlQueryStressEngine
             {
                 _threads[i].Start();
             }
+
+            State = QueryStressTestState.Executing;
         }
 
         private Thread[] GetWorkerThreads(CancellationToken cancellationToken)
@@ -82,6 +86,11 @@ namespace SqlQueryStressEngine
                     if (completedThreads == ThreadCount)
                     {
                         _stopwatch.Stop();
+
+                        State = workerParameters.CancellationToken.IsCancellationRequested
+                            ? QueryStressTestState.Stopped
+                            : QueryStressTestState.Complete;
+
                         StressTestComplete?.Invoke(this, new EventArgs());
                     }
                 });
@@ -139,6 +148,7 @@ namespace SqlQueryStressEngine
             if(IsRunning)
             {
                 _cancellationTokenSource.Cancel();
+                State = QueryStressTestState.Stopping;
             }
             else
             {

@@ -30,9 +30,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Content="Mean Execution Time:"/>
+            <Label Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Content="Mean Elapsed Time:"/>
             <Label
                 Grid.Column="1"
                 x:Name="avgExecutionTimeLabel"
@@ -42,6 +43,12 @@
 
             <Label
                 Grid.Column="2"
+                x:Name="testStateLabel"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Right" />
+            
+            <Label
+                Grid.Column="3"
                 x:Name="elapsedTimeLabel"
                 ContentStringFormat="hh\:mm\:ss\.fff"
                 VerticalContentAlignment="Center"

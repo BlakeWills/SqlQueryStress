@@ -74,6 +74,13 @@ namespace SqlQueryStressGUI.TestEnvironment
             set => SetProperty(value, ref _avgExecutionTime);
         }
 
+        private QueryStressTestState _state;
+        public QueryStressTestState State
+        {
+            get => _state;
+            set => SetProperty(value, ref _state);
+        }
+
         public ObservableCollection<QueryExecution> Results { get; }
 
         public void StartQueryStressTest()
@@ -91,11 +98,13 @@ namespace SqlQueryStressGUI.TestEnvironment
             {
                 timer.Stop();
                 Elapsed = _test.Elapsed;
+                State = _test.State;
             };
 
             timer.Tick += (sender, args) =>
             {
                 Elapsed = _test.Elapsed;
+                State = _test.State;
             };
 
             timer.Start();
