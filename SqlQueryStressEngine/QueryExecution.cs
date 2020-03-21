@@ -10,5 +10,7 @@ namespace SqlQueryStressEngine
         public ParameterSet Parameters { get; set; }
 
         public Exception ExecutionError { get; set; }
+
+        public string ExecutionPlan { get; set; }
     }
 }

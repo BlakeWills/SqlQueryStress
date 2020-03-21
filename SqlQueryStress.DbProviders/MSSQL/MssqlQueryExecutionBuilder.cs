@@ -13,11 +13,13 @@ namespace SqlQueryStress.DbProviders.MSSQL
 
         public double ClientElapsedMilliseconds { get; set; }
 
+        public string PlanXml { get; set; }
+
         public ParameterSet QueryParameters { get; set; }
 
         public Exception ExecutionError { get; set; }
 
-        public MssqlQueryExecution Build() => new MssqlQueryExecution(ElapsedMilliseconds, CpuMilliseconds, LogicalReads, ClientElapsedMilliseconds)
+        public MssqlQueryExecution Build() => new MssqlQueryExecution(ElapsedMilliseconds, CpuMilliseconds, LogicalReads, ClientElapsedMilliseconds, PlanXml)
         {
             Parameters = QueryParameters,
             ExecutionError = ExecutionError

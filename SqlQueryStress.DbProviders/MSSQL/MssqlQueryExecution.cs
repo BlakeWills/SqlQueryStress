@@ -8,12 +8,14 @@ namespace SqlQueryStress.DbProviders.MSSQL
             double elapsedMilliseconds,
             double cpuMilliseconds,
             int logicalReads,
-            double clientElapsedMilliseconds)
+            double clientElapsedMilliseconds,
+            string planXml)
         {
             ElapsedMilliseconds = elapsedMilliseconds;
             CpuMilliseconds = cpuMilliseconds;
             LogicalReads = logicalReads;
             ClientElapsedMilliseconds = clientElapsedMilliseconds;
+            ExecutionPlan = planXml;
         }
 
         public override double ElapsedMilliseconds { get; }

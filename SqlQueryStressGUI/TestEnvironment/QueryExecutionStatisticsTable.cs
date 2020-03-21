@@ -14,7 +14,7 @@ namespace SqlQueryStressGUI.TestEnvironment
         private readonly Dictionary<DataRow, QueryExecution> _queryExecutionMap;
 
         private static readonly string[] _queryExecutionIgnoredPropertyNames =
-            new[] { nameof(QueryExecution.Parameters), nameof(QueryExecution.ExecutionError) };
+            new[] { nameof(QueryExecution.Parameters), nameof(QueryExecution.ExecutionError), nameof(QueryExecution.ExecutionPlan) };
 
         public QueryExecutionStatisticsTable()
         {
