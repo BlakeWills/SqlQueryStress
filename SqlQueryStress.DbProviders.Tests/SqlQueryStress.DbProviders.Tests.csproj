@@ -16,4 +16,19 @@
     <ProjectReference Include="..\SqlQueryStress.DbProviders\SqlQueryStress.DbProviders.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="QueryPlans\QueryPlanResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QueryPlanResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="QueryPlans\QueryPlanResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>QueryPlanResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

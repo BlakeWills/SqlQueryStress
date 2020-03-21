@@ -7,18 +7,18 @@ namespace SqlQueryStress.DbProviders.MSSQL
 {
     public class MssqlQueryWorker : IQueryWorker
     {
-        MssqlMessageParser _messageParser;
+        MssqlExecutionPlanParser _executionPlanParser;
 
         public MssqlQueryWorker()
         {
-            _messageParser = new MssqlMessageParser();
+            _executionPlanParser = new MssqlExecutionPlanParser();
         }
 
         public void Start(
             QueryWorkerParameters workerParameters,
             Action<QueryExecution> onQueryExecutionComplete)
         {
-            var query = $"SET STATISTICS IO ON;\nSET STATISTICS TIME ON;\nSET STATISTICS XML ON;\n{workerParameters.Query}";
+            var query = $"SET STATISTICS XML ON;\n{workerParameters.Query}";
 
             for (int i = 0; i < workerParameters.Iterations; i++)
             {
@@ -33,14 +33,6 @@ namespace SqlQueryStress.DbProviders.MSSQL
                     using var cmd = new SqlCommand(query, con);
 
                     con.Open();
-
-                    con.InfoMessage += (sender, args) =>
-                    {
-                        var result = _messageParser.ParseSqlInfoMessage(args);
-                        builder.CpuMilliseconds = result.CpuTime;
-                        builder.ElapsedMilliseconds = result.ElapsedTime;
-                        builder.LogicalReads = result.LogicalReads;
-                    };
 
                     foreach (var param in workerParameters.QueryParameters.Parameters)
                     {
@@ -60,6 +52,14 @@ namespace SqlQueryStress.DbProviders.MSSQL
                                 builder.PlanXml = reader.GetString(0);
                             }
                         }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(builder.PlanXml))
+                    {
+                        var executionPlanParseResult = _executionPlanParser.Parse(builder.PlanXml);
+                        builder.LogicalReads = executionPlanParseResult.LogicalReads;
+                        builder.ElapsedMilliseconds = executionPlanParseResult.ElapsedTime;
+                        builder.CpuMilliseconds = executionPlanParseResult.CpuTime;
                     }
 
                     builder.ClientElapsedMilliseconds = sw.Elapsed.TotalMilliseconds;
