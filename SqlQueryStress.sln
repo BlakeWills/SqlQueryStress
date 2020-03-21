@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStress.DbProviders"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStress.DbProviders.Tests", "SqlQueryStress.DbProviders.Tests\SqlQueryStress.DbProviders.Tests.csproj", "{6B502B62-537E-48F9-987D-C21770E9EAC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlQueryStressGUI.Tests.Unit", "SqlQueryStressGUI.Tests.Unit\SqlQueryStressGUI.Tests.Unit.csproj", "{7C4B040C-1EA0-4671-B904-EAABA59312E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryStressGUI.Tests.Unit", "SqlQueryStressGUI.Tests.Unit\SqlQueryStressGUI.Tests.Unit.csproj", "{7C4B040C-1EA0-4671-B904-EAABA59312E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2694402D-EF34-4937-AFC0-E1D8A97A95F7}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
