@@ -38,5 +38,13 @@ namespace SqlQueryStress.DbProviders.Tests
 
             Assert.AreEqual(testCase.LogicalReads, result.LogicalReads);
         }
+
+        [TestCaseSource(typeof(ExecutionPlanTestCaseProvider), nameof(ExecutionPlanTestCaseProvider.TestCases))]
+        public void ReturnsCorrectQueryPlanHash(ExecutionPlanTestCase testCase)
+        {
+            var result = _executionPlanParser.Parse(testCase.ExecutionPlan);
+
+            Assert.AreEqual(testCase.QueryPlanHash, result.QueryPlanHash);
+        }
     }
 }

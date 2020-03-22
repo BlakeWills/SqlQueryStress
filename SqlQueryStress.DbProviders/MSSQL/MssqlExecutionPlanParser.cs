@@ -15,12 +15,14 @@ namespace SqlQueryStress.DbProviders.MSSQL
             var elapsedTime = double.Parse(queryTimeStatsNode.Attribute("ElapsedTime").Value);
 
             var logicalReads = xDoc.Descendants().Attributes("ActualLogicalReads").Sum(x => int.Parse(x.Value));
+            var queryPlanHash = xDoc.Descendants($"{{{xmlNamespace}}}StmtSimple").Attributes("QueryPlanHash").Single().Value;
 
             return new MssqlExecutionPlanStats()
             {
                 CpuTime = cpuTime,
                 ElapsedTime = elapsedTime,
-                LogicalReads = logicalReads
+                LogicalReads = logicalReads,
+                QueryPlanHash = queryPlanHash
             };
         }
     }

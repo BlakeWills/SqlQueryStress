@@ -7,5 +7,7 @@
         public double ElapsedTime { get; set; }
 
         public int LogicalReads { get; set; }
+
+        public string QueryPlanHash { get; set; }
     }
 }
