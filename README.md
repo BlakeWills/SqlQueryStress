@@ -1,5 +1,7 @@
 # SQLQueryStress
 
+![.NET Core](https://github.com/BlakeWills/SqlQueryStress/workflows/.NET%20Core/badge.svg)
+
 This project was inspired by Adam Mechanics original [SQLQueryStress](https://github.com/ErikEJ/SqlQueryStress).
 
 
