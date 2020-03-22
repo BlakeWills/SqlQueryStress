@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>SqlQueryStressGUI.App</StartupObject>
+    <PublishTrimmed>true</PublishTrimmed>
     <ApplicationIcon />
     <Win32Resource />
   </PropertyGroup>
