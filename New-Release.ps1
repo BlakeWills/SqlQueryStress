@@ -2,13 +2,21 @@
 param(
 	[Parameter(Mandatory)]
 	[string]$Version,
-	[Parameter(Mandatory)]
-	[string]$GithubApiKey,
 	[Parameter(Mandatory="false")]
 	[string]$Project="SqlQueryStressGUI",
 	[Parameter(Mandatory="false")]
 	[string]$Runtime="win-x86",
+
+	[Parameter(Mandatory, ParameterSetName="PublishLocal")]
+	[switch]$PublishLocal,
+
+	[Parameter(Mandatory, ParameterSetName="PublishGithub")]
+	[switch]$PublishRelease=$false,
+	[Parameter(Mandatory=$false, ParameterSetName="PublishGithub")]
+	[string]$GithubApiKey,
+	[Parameter(Mandatory=$false, ParameterSetName="PublishGithub")]
 	[bool]$Draft=$false,
+	[Parameter(Mandatory=$false, ParameterSetName="PublishGithub")]
 	[bool]$PreRelease=$false
 )
 
@@ -36,6 +44,10 @@ if(Test-Path $releaseFileName) {
 
 7z.exe a $releaseFileName `"$ArtifactPath\*`" -aoa -o"$(Resolve-Path .)" -y
 if($LastExitCode -ne 0) { throw "7z.exe returned exit code: $LastExitCode"}
+
+if(!$PublishRelease) {
+	return
+}
 
 Write-Information "Publishing to GitHub"
 $authHeaders = @{
