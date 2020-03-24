@@ -2,24 +2,23 @@
 
 ![.NET Core](https://github.com/BlakeWills/SqlQueryStress/workflows/.NET%20Core/badge.svg)
 
-This project was inspired by Adam Mechanics original [SQLQueryStress](https://github.com/ErikEJ/SqlQueryStress).
+This project was inspired by Adam Mechanic's original [SQLQueryStress](https://github.com/ErikEJ/SqlQueryStress).
 
 
 ## Getting Started 
 
 1) Create a database connection
-- Open the connection dropdown from the toolbar and select "Connection Manager"
-- Click the new connection button.
-- Choose a name, database engine and specify a [connection string](https://www.connectionstrings.com/sql-server/).
-- Click Save and close all but the main window.
+    - Open the connection dropdown from the toolbar and select "Connection Manager"
+    - Click the new connection button.
+    - Choose a name, database engine and specify a [connection string](https://www.connectionstrings.com/sql-server/).
+    - Click Save and close all but the main window.
 
 2) Enter your query in the main query editor.
 
-3) If your query has parameters, set values using the parameters window.
-- Open the Parameters window by clicking on the parameters button within the toolbar.
+3) If your query has parameters, set values using the parameters window, which is available by clicking on the parameters button within the toolbar.
 
 
-## Parametised Queries
+## Parameterized Queries
 
 SQLQueryStress currently supports three types of query parameters:
  1) Random numbers within a range
