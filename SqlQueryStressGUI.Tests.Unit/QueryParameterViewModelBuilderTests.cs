@@ -22,28 +22,37 @@ namespace SqlQueryStressGUI.Tests.Unit
 
             _expectedViewModels = new List<ParameterViewModel>
             {
-                new ParameterViewModel("@Start", _settingsViewModelBuilder),
-                new ParameterViewModel("@End", _settingsViewModelBuilder)
+                new ParameterViewModel("@@Start", _settingsViewModelBuilder),
+                new ParameterViewModel("@@End", _settingsViewModelBuilder)
             };
 
             _viewModels = new List<ParameterViewModel>();
 
             _query = @"
-			    SELECT
-				    ProductID,
-				    DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01) [Date],
-				    SUM(UnitPrice * OrderQty) [TotalSales]
-			    FROM
-				    [Sales].[SalesOrderDetail] sod
-				    JOIN [Sales].[SalesOrderHeader] soh ON soh.SalesOrderID = sod.SalesOrderID
+                DECLARE @ProductID INT = 772;
+                SELECT
+	                ProductID,
+	                DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01) [Date],
+	                SUM(UnitPrice * OrderQty) [Sales],
+	                (	
+		                SELECT SUM (UnitPrice * OrderQty)
+		                FROM [Sales].[SalesOrderDetail] sod
+		                JOIN [Sales].[SalesOrderHeader] soh on soh.SalesOrderID = sod.SalesOrderID
+		                WHERE soh.OrderDate BETWEEN @@Start AND @@End
+		                AND sod.ProductID = @ProductID
+	                )[TotalSales]
+                FROM
+	                [Sales].[SalesOrderDetail] sod
+	                JOIN [Sales].[SalesOrderHeader] soh ON soh.SalesOrderID = sod.SalesOrderID
                 WHERE
-				    soh.OrderDate BETWEEN @Start AND @End
-			    GROUP BY
-				    ProductID,
-				    DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01)
-			    ORDER BY
-				    [Date] DESC,
-				    TotalSales DESC";
+	                soh.OrderDate BETWEEN @@Start AND @@End
+                    AND sod.ProductID = @ProductID
+                GROUP BY
+	                ProductID,
+	                DATEFROMPARTS(YEAR(soh.OrderDate), MONTH(soh.OrderDate), 01)
+                ORDER BY
+	                [Date] DESC,
+	                Sales DESC";
         }
 
         [Test]
@@ -57,8 +66,8 @@ namespace SqlQueryStressGUI.Tests.Unit
         [Test]
         public void GivenQueryWithParams_MatchingExistingViewModels_MakesNoChanges()
         {
-            var startParam = new ParameterViewModel("@Start", _settingsViewModelBuilder);
-            var endParam = new ParameterViewModel("@End", _settingsViewModelBuilder);
+            var startParam = new ParameterViewModel("@@Start", _settingsViewModelBuilder);
+            var endParam = new ParameterViewModel("@@End", _settingsViewModelBuilder);
 
             _viewModels = new List<ParameterViewModel> { startParam, endParam };
 
@@ -73,7 +82,7 @@ namespace SqlQueryStressGUI.Tests.Unit
         [Test]
         public void GivenUpdatedQueryWithParams_BuildsMissingViewModels()
         {
-            var startParam = new ParameterViewModel("@Start", _settingsViewModelBuilder);
+            var startParam = new ParameterViewModel("@@Start", _settingsViewModelBuilder);
             _viewModels = new List<ParameterViewModel> { startParam };
 
             _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
@@ -87,7 +96,7 @@ namespace SqlQueryStressGUI.Tests.Unit
         {
             _query = "SELECT * FROM MyTable";
 
-            var startParam = new ParameterViewModel("@Start", _settingsViewModelBuilder);
+            var startParam = new ParameterViewModel("@@Start", _settingsViewModelBuilder);
             _viewModels = new List<ParameterViewModel> { startParam };
 
             _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
@@ -95,12 +104,21 @@ namespace SqlQueryStressGUI.Tests.Unit
             CollectionAssert.IsEmpty(_viewModels);
         }
 
+        [Test]
+        public void GivenQueryWithVariableDeclaration_DoesNotMatchVariables()
+        {
+            _builder.UpdateQueryParameterViewModels(_query, ref _viewModels);
+
+            // @ProductID is the variable that should not be matched.
+            _viewModels.Should().BeEquivalentTo(_expectedViewModels);
+        }
+
         [TestCase("")]
         [TestCase("    ")]
         [TestCase(null)]
         public void GivenEmptyQuery_ClearsParameterList(string query)
         {
-            var startParam = new ParameterViewModel("@Start", _settingsViewModelBuilder);
+            var startParam = new ParameterViewModel("@@Start", _settingsViewModelBuilder);
             _viewModels = new List<ParameterViewModel> { startParam };
 
             _builder.UpdateQueryParameterViewModels(query, ref _viewModels);
@@ -125,7 +143,7 @@ namespace SqlQueryStressGUI.Tests.Unit
         [Test]
         public void QueryHasParameters_GivenQueryWithParameters_ReturnsTrue()
         {
-            Assert.IsTrue(_builder.QueryHasParameters("SELECT * FROM myTable WHERE myColumn = @myValue"));
+            Assert.IsTrue(_builder.QueryHasParameters("SELECT * FROM myTable WHERE myColumn = @@myValue"));
         }
     }
 }

@@ -25,13 +25,13 @@ SQLQueryStress currently supports three types of query parameters:
  2) Random dates
  3) Parameter values which come from a database query.
 
- Query parameters should use the `@paramName` syntax, e.g.:
+ Query parameters should use the `@@paramName` syntax, e.g.:
 
- `SELECT * FROM myTable WHERE myColumn = @myParam`
+ `SELECT * FROM myTable WHERE myColumn = @@myParam`
 
 There is also the concept of "Linked Parameters" for situations where a parameter value is dependant on the value of another parameter, such as the end date in a date range.
 
-As an example, to configure a date range first configure the start date parameter by setting the parameter type to "Random Date Range", then specify a minimum date, maximum date and maximum interval between the dates in the range. The end date can then be configured by setting the paramater type to "Random Date Range" and setting the Linked Parameter to `@StartDate`.
+As an example, to configure a date range first configure the start date parameter by setting the parameter type to "Random Date Range", then specify a minimum date, maximum date and maximum interval between the dates in the range. The end date can then be configured by setting the paramater type to "Random Date Range" and setting the Linked Parameter to `@@StartDate`.
 
 ## Screenshots
 
@@ -43,10 +43,11 @@ Execution Details:
 
 ## Road Map
 
+- Cross Platform GUI
+- Command Line Application
 - Support for other database engines (I.E Couchbase, PostgreSQL)
-- Parameter Validation
 - Query Performance Comparison
-- Add histograms to help visualise query performance.
+- Histograms / Live Visualisations.
 
 ## Contributing
 
